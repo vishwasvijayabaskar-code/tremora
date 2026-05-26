@@ -7,84 +7,71 @@ import ChromeObjects from '../components/ChromeObjects'
 gsap.registerPlugin(ScrollTrigger)
 
 const heroObjects = [
-  { type: 'pill', position: [-3.5, 1.8, -0.5], scale: 0.45, speed: 0.7 },
-  { type: 'torus', position: [3.8, -1.5, -0.3], scale: 0.5, speed: 0.5 },
-  { type: 'pulse', position: [-3.2, -2, -0.8], scale: 0.35, speed: 0.6 },
-  { type: 'brain', position: [3.5, 2, -0.6], scale: 0.35, speed: 0.4 },
+  { type: 'pill', position: [-3.2, 1.5, -0.3], scale: 0.5, speed: 0.6 },
+  { type: 'torus', position: [3.5, -1.2, -0.2], scale: 0.55, speed: 0.4 },
+  { type: 'pulse', position: [-2.8, -1.8, -0.5], scale: 0.4, speed: 0.5 },
+  { type: 'brain', position: [3.2, 1.8, -0.4], scale: 0.4, speed: 0.35 },
 ]
+
+const subtitleWords = 'A wrist-worn sensor that tracks Parkinson\'s tremor severity 24/7, scores it with a trained classifier, and shows neurologists what happens between visits.'.split(' ')
 
 export default function Hero() {
   const sectionRef = useRef()
-  const titleRef = useRef()
+  const titleWrapRef = useRef()
   const subtitleRef = useRef()
   const ctaRef = useRef()
-  const lineRef = useRef()
+  const contentRef = useRef()
+  const tagRef = useRef()
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      const letters = titleRef.current.querySelectorAll('.hero-letter')
-      gsap.from(letters, {
-        y: 120,
-        opacity: 0,
-        rotateX: -90,
-        duration: 1.2,
-        stagger: 0.04,
-        ease: 'power4.out',
-        delay: 0.1,
-      })
+      const tl = gsap.timeline({ defaults: { ease: 'power4.out' } })
 
-      gsap.from(lineRef.current, {
-        scaleX: 0,
+      tl.from('.hero-line', {
+        yPercent: 110,
+        rotateX: -80,
+        opacity: 0,
+        duration: 1.4,
+        stagger: 0.12,
+      })
+      .from(tagRef.current, {
+        width: 0,
         duration: 0.8,
         ease: 'power2.inOut',
-        delay: 0.6,
-      })
-
-      gsap.from(subtitleRef.current, {
-        y: 40,
+      }, '-=0.6')
+      .from('.hero-word', {
+        y: 20,
         opacity: 0,
-        duration: 0.8,
-        ease: 'power2.out',
-        delay: 0.7,
-      })
-
-      gsap.from(ctaRef.current, {
-        y: 30,
+        duration: 0.5,
+        stagger: 0.03,
+      }, '-=0.4')
+      .from(ctaRef.current.children, {
+        y: 20,
         opacity: 0,
-        duration: 0.7,
-        ease: 'power2.out',
-        delay: 0.9,
+        scale: 0.9,
+        duration: 0.6,
+        stagger: 0.1,
+      }, '-=0.3')
+
+      gsap.to(contentRef.current, {
+        scale: 0.85,
+        opacity: 0,
+        y: -60,
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top top',
+          end: '80% top',
+          scrub: 1.5,
+        },
       })
 
-      gsap.to(titleRef.current, {
-        y: -100,
+      gsap.to(sectionRef.current, {
+        '--gradient-pos': '100%',
         scrollTrigger: {
           trigger: sectionRef.current,
           start: 'top top',
           end: 'bottom top',
-          scrub: 1,
-        },
-      })
-
-      gsap.to(subtitleRef.current, {
-        y: -50,
-        opacity: 0,
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: '25% top',
-          end: '70% top',
-          scrub: 1,
-        },
-      })
-
-      gsap.to(ctaRef.current, {
-        y: -30,
-        opacity: 0,
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: '25% top',
-          end: '60% top',
-          scrub: 1,
+          scrub: 2,
         },
       })
     }, sectionRef)
@@ -102,65 +89,79 @@ export default function Hero() {
       justifyContent: 'center',
       overflow: 'hidden',
     }}>
+      <div style={{
+        position: 'absolute',
+        inset: 0,
+        background: 'radial-gradient(ellipse 80% 60% at 50% 120%, rgba(249,150,103,0.08) 0%, transparent 70%)',
+        pointerEvents: 'none',
+      }} />
+
       <ChromeObjects objects={heroObjects} />
 
-      <div style={{
+      <div ref={contentRef} style={{
         position: 'relative',
         zIndex: 3,
         textAlign: 'center',
-        maxWidth: '1000px',
+        maxWidth: '1100px',
         padding: '0 24px',
+        willChange: 'transform, opacity',
       }}>
-        <div ref={titleRef} style={{
-          fontFamily: 'var(--font-display)',
-          fontSize: 'clamp(5rem, 15vw, 13rem)',
-          fontWeight: 400,
-          color: 'var(--text-primary)',
-          lineHeight: 0.9,
-          marginBottom: '32px',
-          letterSpacing: '0.02em',
-          textTransform: 'uppercase',
-          perspective: '600px',
+        <div ref={titleWrapRef} style={{
+          marginBottom: '28px',
           overflow: 'hidden',
         }}>
-          {'TREMORA'.split('').map((char, i) => (
-            <span
-              key={i}
-              className="hero-letter"
-              style={{
-                display: 'inline-block',
+          <div style={{
+            fontFamily: 'var(--font-display)',
+            fontSize: 'clamp(5.5rem, 16vw, 14rem)',
+            fontWeight: 400,
+            color: 'var(--text-primary)',
+            lineHeight: 0.85,
+            letterSpacing: '-0.02em',
+            textTransform: 'uppercase',
+            perspective: '800px',
+          }}>
+            <div style={{ overflow: 'hidden', paddingBottom: '8px' }}>
+              <div className="hero-line" style={{
+                display: 'block',
                 transformOrigin: 'bottom center',
-              }}
-            >
-              {char}
-            </span>
-          ))}
+                willChange: 'transform',
+              }}>
+                Tremora
+              </div>
+            </div>
+          </div>
         </div>
 
         <div
-          ref={lineRef}
+          ref={tagRef}
           style={{
-            width: '60px',
-            height: '2px',
+            width: '80px',
+            height: '3px',
             background: 'var(--coral)',
-            margin: '0 auto 32px',
-            transformOrigin: 'left center',
+            margin: '0 auto 28px',
+            borderRadius: '2px',
+            overflow: 'hidden',
           }}
         />
 
         <p ref={subtitleRef} style={{
           fontFamily: 'var(--font-sans)',
-          fontSize: 'clamp(1rem, 1.6vw, 1.15rem)',
+          fontSize: 'clamp(0.95rem, 1.5vw, 1.1rem)',
           color: 'var(--text-secondary)',
-          marginBottom: '40px',
           fontWeight: 400,
-          lineHeight: 1.6,
-          maxWidth: '520px',
-          margin: '0 auto 40px',
+          lineHeight: 1.7,
+          maxWidth: '540px',
+          margin: '0 auto 36px',
         }}>
-          A wrist-worn sensor that tracks Parkinson's tremor severity 24/7,
-          scores it with a trained classifier, and shows neurologists what
-          happens between visits.
+          {subtitleWords.map((word, i) => (
+            <span
+              key={i}
+              className="hero-word"
+              style={{ display: 'inline-block', marginRight: '0.3em' }}
+            >
+              {word}
+            </span>
+          ))}
         </p>
 
         <div ref={ctaRef} style={{
@@ -176,6 +177,41 @@ export default function Hero() {
             Join Waitlist
           </Button>
         </div>
+      </div>
+
+      <div style={{
+        position: 'absolute',
+        bottom: '32px',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        zIndex: 4,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: '8px',
+      }}>
+        <span style={{
+          fontSize: '0.65rem',
+          textTransform: 'uppercase',
+          letterSpacing: '0.2em',
+          color: 'var(--text-muted)',
+          fontWeight: 500,
+        }}>
+          Scroll
+        </span>
+        <div style={{
+          width: '1px',
+          height: '32px',
+          background: 'var(--text-muted)',
+          opacity: 0.3,
+          animation: 'scrollPulse 2s ease-in-out infinite',
+        }} />
+        <style>{`
+          @keyframes scrollPulse {
+            0%, 100% { transform: scaleY(1); opacity: 0.3; }
+            50% { transform: scaleY(0.5); opacity: 0.6; }
+          }
+        `}</style>
       </div>
     </section>
   )

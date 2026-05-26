@@ -22,6 +22,7 @@ function AnimatedWave({ color = 'var(--coral)', height = 60, type = 'snapshot' }
     ctx.scale(2, 2)
 
     let frame = 0
+    let animId
     const animate = () => {
       ctx.clearRect(0, 0, canvas.offsetWidth, height)
       ctx.beginPath()
@@ -53,9 +54,10 @@ function AnimatedWave({ color = 'var(--coral)', height = 60, type = 'snapshot' }
       ctx.stroke()
       ctx.globalAlpha = 1
       frame++
-      requestAnimationFrame(animate)
+      animId = requestAnimationFrame(animate)
     }
     animate()
+    return () => cancelAnimationFrame(animId)
   }, [color, height, type])
 
   return (
@@ -69,15 +71,16 @@ function AnimatedWave({ color = 'var(--coral)', height = 60, type = 'snapshot' }
 export default function Problem() {
   const sectionRef = useRef()
   const headerRef = useRef()
+  const bigNumRef = useRef()
   const statsRef = useRef()
   const wavesRef = useRef()
 
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.from(headerRef.current, {
-        x: -60,
+        x: -80,
         opacity: 0,
-        duration: 1,
+        duration: 1.2,
         ease: 'power3.out',
         scrollTrigger: {
           trigger: headerRef.current,
@@ -86,12 +89,24 @@ export default function Problem() {
         },
       })
 
-      gsap.from(statsRef.current.children, {
-        y: 50,
+      gsap.from(bigNumRef.current, {
+        scale: 0.5,
         opacity: 0,
-        duration: 0.6,
-        stagger: 0.12,
+        duration: 1,
         ease: 'power2.out',
+        scrollTrigger: {
+          trigger: bigNumRef.current,
+          start: 'top 85%',
+          toggleActions: 'play none none none',
+        },
+      })
+
+      gsap.from(statsRef.current.children, {
+        y: 60,
+        opacity: 0,
+        duration: 0.7,
+        stagger: 0.1,
+        ease: 'power3.out',
         scrollTrigger: {
           trigger: statsRef.current,
           start: 'top 80%',
@@ -100,10 +115,10 @@ export default function Problem() {
       })
 
       gsap.from(wavesRef.current.children, {
-        scale: 0.9,
+        scale: 0.92,
         opacity: 0,
         duration: 0.8,
-        stagger: 0.2,
+        stagger: 0.15,
         ease: 'power2.out',
         scrollTrigger: {
           trigger: wavesRef.current,
@@ -113,12 +128,12 @@ export default function Problem() {
       })
 
       gsap.to(headerRef.current, {
-        y: -30,
+        y: -40,
         scrollTrigger: {
           trigger: sectionRef.current,
           start: 'top center',
           end: 'bottom top',
-          scrub: 1.5,
+          scrub: 2,
         },
       })
     }, sectionRef)
@@ -137,45 +152,79 @@ export default function Problem() {
       }}
     >
       <div className="container">
-        <div ref={headerRef} style={{ marginBottom: '48px', maxWidth: '700px' }}>
-          <span style={{
-            fontSize: '0.75rem',
-            textTransform: 'uppercase',
-            letterSpacing: '0.2em',
-            color: 'var(--text-muted)',
-            fontWeight: 500,
-            marginBottom: '20px',
-            display: 'block',
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: '1.2fr 1fr',
+          gap: '60px',
+          alignItems: 'start',
+          marginBottom: '56px',
+        }}>
+          <div ref={headerRef}>
+            <span style={{
+              fontSize: '0.7rem',
+              textTransform: 'uppercase',
+              letterSpacing: '0.2em',
+              color: 'var(--text-muted)',
+              fontWeight: 500,
+              marginBottom: '20px',
+              display: 'block',
+            }}>
+              The Problem
+            </span>
+            <h2 style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'clamp(2.2rem, 5vw, 3.8rem)',
+              color: 'var(--text-primary)',
+              letterSpacing: '-0.02em',
+              textTransform: 'uppercase',
+              lineHeight: 1,
+              marginBottom: '24px',
+            }}>
+              Neurologists make 3-month decisions from 15-minute snapshots.
+            </h2>
+            <p style={{
+              color: 'var(--text-secondary)',
+              fontSize: '0.95rem',
+              lineHeight: 1.7,
+              maxWidth: '480px',
+            }}>
+              A typical Parkinson's patient sees their neurologist four times a year.
+              Each visit captures roughly 15 minutes of motor behavior. Medication
+              decisions that affect the next 90 days are made from that sliver.
+            </p>
+          </div>
+
+          <div ref={bigNumRef} style={{
+            textAlign: 'center',
+            padding: '40px',
           }}>
-            The Problem
-          </span>
-          <h2 style={{
-            fontFamily: 'var(--font-display)',
-            fontSize: 'clamp(2.5rem, 6vw, 4.5rem)',
-            color: 'var(--text-primary)',
-            letterSpacing: '-0.02em',
-            textTransform: 'uppercase',
-            lineHeight: 1,
-          }}>
-            Neurologists make 3-month decisions from 15-minute snapshots.
-          </h2>
-          <p style={{
-            color: 'var(--text-secondary)',
-            fontSize: '1rem',
-            lineHeight: 1.7,
-            marginTop: '20px',
-          }}>
-            A typical Parkinson's patient sees their neurologist four times a year.
-            Each visit captures roughly 15 minutes of motor behavior. Medication
-            decisions that affect the next 90 days are made from that sliver.
-          </p>
+            <div style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'clamp(6rem, 12vw, 10rem)',
+              fontWeight: 800,
+              color: 'var(--coral)',
+              lineHeight: 0.85,
+              opacity: 0.15,
+            }}>
+              1hr
+            </div>
+            <div style={{
+              fontSize: '0.8rem',
+              color: 'var(--text-muted)',
+              marginTop: '12px',
+              textTransform: 'uppercase',
+              letterSpacing: '0.15em',
+            }}>
+              Total clinical observation per year
+            </div>
+          </div>
         </div>
 
         <div ref={statsRef} style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(4, 1fr)',
-          gap: '16px',
-          marginBottom: '48px',
+          gap: '12px',
+          marginBottom: '56px',
         }}>
           {stats.map((stat, i) => (
             <div
@@ -183,13 +232,13 @@ export default function Problem() {
               style={{
                 background: i === 0 ? 'var(--lavender-light)' : i === 1 ? 'var(--peach-light)' : i === 2 ? 'var(--cream-light)' : 'var(--coral-light)',
                 borderRadius: 'var(--radius-lg)',
-                padding: '36px 24px',
+                padding: '32px 20px',
                 textAlign: 'center',
               }}
             >
               <div style={{
                 fontFamily: 'var(--font-display)',
-                fontSize: '3.5rem',
+                fontSize: '3rem',
                 fontWeight: 800,
                 color: 'var(--text-primary)',
                 marginBottom: '4px',
@@ -198,15 +247,15 @@ export default function Problem() {
                 {stat.number}
               </div>
               <div style={{
-                fontSize: '0.9rem',
+                fontSize: '0.85rem',
                 fontWeight: 600,
                 color: 'var(--text-primary)',
-                marginBottom: '8px',
+                marginBottom: '6px',
               }}>
                 {stat.label}
               </div>
               <div style={{
-                fontSize: '0.75rem',
+                fontSize: '0.7rem',
                 color: 'var(--text-secondary)',
                 lineHeight: 1.4,
               }}>
@@ -219,18 +268,18 @@ export default function Problem() {
         <div ref={wavesRef} style={{
           display: 'grid',
           gridTemplateColumns: '1fr 1fr',
-          gap: '24px',
-          maxWidth: '900px',
+          gap: '20px',
+          maxWidth: '860px',
           margin: '0 auto',
         }}>
           <div style={{
             background: 'white',
             borderRadius: 'var(--radius-xl)',
-            padding: '36px',
+            padding: '32px',
             border: '1px solid rgba(0,0,0,0.06)',
           }}>
             <div style={{
-              fontSize: '0.7rem',
+              fontSize: '0.65rem',
               textTransform: 'uppercase',
               letterSpacing: '0.15em',
               color: 'var(--text-muted)',
@@ -240,18 +289,18 @@ export default function Problem() {
               Current: Clinic Snapshot
             </div>
             <AnimatedWave color="var(--text-muted)" height={60} type="snapshot" />
-            <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '16px', lineHeight: 1.6 }}>
-              Brief visibility window. Most tremor data is invisible.
+            <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '14px', lineHeight: 1.5 }}>
+              Brief visibility window. Most tremor data invisible.
             </p>
           </div>
           <div style={{
             background: 'var(--cream-light)',
             borderRadius: 'var(--radius-xl)',
-            padding: '36px',
+            padding: '32px',
             border: '2px solid var(--coral)',
           }}>
             <div style={{
-              fontSize: '0.7rem',
+              fontSize: '0.65rem',
               textTransform: 'uppercase',
               letterSpacing: '0.15em',
               color: 'var(--coral)',
@@ -261,7 +310,7 @@ export default function Problem() {
               TremoTrack: Continuous
             </div>
             <AnimatedWave color="var(--coral)" height={60} type="continuous" />
-            <p style={{ fontSize: '0.85rem', color: 'var(--text-primary)', marginTop: '16px', lineHeight: 1.6 }}>
+            <p style={{ fontSize: '0.8rem', color: 'var(--text-primary)', marginTop: '14px', lineHeight: 1.5 }}>
               Full tremor signal. Every fluctuation captured.
             </p>
           </div>
