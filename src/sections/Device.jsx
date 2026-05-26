@@ -1,17 +1,61 @@
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
 
 const components = [
-  { label: 'ESP32-WROOM-32', desc: 'Dual-core MCU with Wi-Fi/BLE', x: '12%', y: '22%' },
-  { label: 'MPU-6050 IMU', desc: '6-axis motion sensing at 200Hz', x: '78%', y: '18%' },
-  { label: 'Random Forest', desc: '86.4% accuracy, on-device inference', x: '15%', y: '52%' },
-  { label: 'TP4056 + LiPo', desc: '2000mAh, USB-C rechargeable', x: '75%', y: '55%' },
-  { label: 'SPIFFS Storage', desc: 'Per-session CSV data logging', x: '12%', y: '80%' },
-  { label: 'Med Button', desc: 'One-press dose event logging', x: '78%', y: '82%' },
+  { label: 'ESP32-WROOM-32', desc: 'Dual-core MCU with Wi-Fi/BLE', x: '12%', y: '22%', color: 'var(--lavender)' },
+  { label: 'MPU-6050 IMU', desc: '6-axis motion sensing at 200Hz', x: '78%', y: '18%', color: 'var(--peach)' },
+  { label: 'Random Forest', desc: '86.4% accuracy, on-device inference', x: '15%', y: '52%', color: 'var(--coral-light)' },
+  { label: 'TP4056 + LiPo', desc: '2000mAh, USB-C rechargeable', x: '75%', y: '55%', color: 'var(--cream-light)' },
+  { label: 'SPIFFS Storage', desc: 'Per-session CSV data logging', x: '12%', y: '80%', color: 'var(--peach-light)' },
+  { label: 'Med Button', desc: 'One-press dose event logging', x: '78%', y: '82%', color: 'var(--lavender-light)' },
 ]
+
+function DeviceChip({ comp, index }) {
+  const [hovered, setHovered] = useState(false)
+
+  return (
+    <div
+      className="device-chip"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        position: 'absolute',
+        left: comp.x,
+        top: comp.y,
+        transform: `translate(-50%, -50%) scale(${hovered ? 1.05 : 1})`,
+        background: hovered ? comp.color : 'white',
+        borderRadius: '14px',
+        padding: '16px 20px',
+        boxShadow: hovered ? '0 8px 32px rgba(0,0,0,0.12)' : '0 2px 16px rgba(0,0,0,0.05)',
+        maxWidth: '180px',
+        zIndex: hovered ? 10 : 3,
+        border: '1px solid rgba(0,0,0,0.04)',
+        transition: 'all 0.3s cubic-bezier(0.22,1,0.36,1)',
+        cursor: 'default',
+      }}
+    >
+      <div style={{
+        fontSize: '0.7rem',
+        fontWeight: 700,
+        color: 'var(--text-primary)',
+        marginBottom: '4px',
+        letterSpacing: '0.02em',
+      }}>
+        {comp.label}
+      </div>
+      <div style={{
+        fontSize: '0.6rem',
+        color: 'var(--text-muted)',
+        lineHeight: 1.4,
+      }}>
+        {comp.desc}
+      </div>
+    </div>
+  )
+}
 
 export default function Device() {
   const sectionRef = useRef()
@@ -51,7 +95,7 @@ export default function Device() {
         y: 20,
         scale: 0.9,
         duration: 0.5,
-        stagger: 0.1,
+        stagger: 0.08,
         ease: 'back.out(1.7)',
         scrollTrigger: {
           trigger: diagramRef.current,
@@ -101,7 +145,7 @@ export default function Device() {
       <div className="container">
         <div ref={headerRef} style={{ textAlign: 'center', marginBottom: '48px' }}>
           <span style={{
-            fontSize: '0.75rem',
+            fontSize: '0.7rem',
             textTransform: 'uppercase',
             letterSpacing: '0.2em',
             color: 'var(--text-muted)',
@@ -132,33 +176,34 @@ export default function Device() {
             minHeight: '480px',
           }}
         >
+          {/* Center device */}
           <div style={{
             position: 'absolute',
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
-            width: '200px',
-            height: '260px',
+            width: '180px',
+            height: '240px',
             background: 'linear-gradient(145deg, var(--lavender), var(--peach-light))',
-            borderRadius: 'var(--radius-xl)',
-            boxShadow: '0 24px 80px rgba(249,150,103,0.2)',
+            borderRadius: '24px',
+            boxShadow: '0 24px 80px rgba(249,150,103,0.15), 0 0 0 1px rgba(0,0,0,0.04)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             flexDirection: 'column',
-            gap: '12px',
+            gap: '10px',
             zIndex: 2,
           }}>
             <div style={{
-              width: '36px',
-              height: '36px',
+              width: '32px',
+              height: '32px',
               borderRadius: '50%',
               background: 'var(--coral)',
-              opacity: 0.9,
+              opacity: 0.85,
             }} />
             <span style={{
               fontFamily: 'var(--font-display)',
-              fontSize: '1.1rem',
+              fontSize: '1rem',
               textTransform: 'uppercase',
               letterSpacing: '0.02em',
               fontWeight: 700,
@@ -166,19 +211,20 @@ export default function Device() {
             }}>
               TremoTrack v1
             </span>
-            <span style={{ fontSize: '0.6rem', color: 'var(--text-secondary)' }}>
+            <span style={{ fontSize: '0.55rem', color: 'var(--text-secondary)', letterSpacing: '0.05em' }}>
               ~50×30×12mm
             </span>
           </div>
 
+          {/* Orbit rings */}
           <div style={{
             position: 'absolute',
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
-            width: '320px',
-            height: '320px',
-            border: '1px solid rgba(26,26,26,0.06)',
+            width: '300px',
+            height: '300px',
+            border: '1px dashed rgba(26,26,26,0.06)',
             borderRadius: '50%',
           }} />
           <div style={{
@@ -188,44 +234,13 @@ export default function Device() {
             transform: 'translate(-50%, -50%)',
             width: '440px',
             height: '440px',
-            border: '1px solid rgba(26,26,26,0.04)',
+            border: '1px dashed rgba(26,26,26,0.04)',
             borderRadius: '50%',
           }} />
 
+          {/* Component chips */}
           {components.map((comp, i) => (
-            <div
-              key={i}
-              className="device-chip"
-              style={{
-                position: 'absolute',
-                left: comp.x,
-                top: comp.y,
-                transform: 'translate(-50%, -50%)',
-                background: 'white',
-                borderRadius: '12px',
-                padding: '14px 18px',
-                boxShadow: '0 2px 16px rgba(0,0,0,0.06)',
-                maxWidth: '170px',
-                zIndex: 3,
-                border: '1px solid rgba(0,0,0,0.04)',
-              }}
-            >
-              <div style={{
-                fontSize: '0.75rem',
-                fontWeight: 700,
-                color: 'var(--text-primary)',
-                marginBottom: '3px',
-              }}>
-                {comp.label}
-              </div>
-              <div style={{
-                fontSize: '0.65rem',
-                color: 'var(--text-muted)',
-                lineHeight: 1.4,
-              }}>
-                {comp.desc}
-              </div>
-            </div>
+            <DeviceChip key={i} comp={comp} index={i} />
           ))}
         </div>
 
@@ -234,10 +249,10 @@ export default function Device() {
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: '16px',
-            marginTop: '72px',
-            maxWidth: '700px',
-            margin: '72px auto 0',
+            gap: '12px',
+            marginTop: '64px',
+            maxWidth: '680px',
+            margin: '64px auto 0',
           }}
         >
           {[
@@ -247,14 +262,14 @@ export default function Device() {
           ].map((item, i) => (
             <div key={i} style={{
               textAlign: 'center',
-              padding: '28px 20px',
+              padding: '24px 16px',
               background: 'white',
               borderRadius: 'var(--radius-lg)',
-              border: '1px solid rgba(0,0,0,0.06)',
+              border: '1px solid rgba(0,0,0,0.05)',
             }}>
               <div style={{
                 fontFamily: 'var(--font-display)',
-                fontSize: '2.5rem',
+                fontSize: '2.2rem',
                 letterSpacing: '-0.02em',
                 fontWeight: 800,
                 color: 'var(--text-primary)',
@@ -262,7 +277,7 @@ export default function Device() {
               }}>
                 {item.value}
               </div>
-              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '8px' }}>
+              <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '6px' }}>
                 {item.label}
               </div>
             </div>
