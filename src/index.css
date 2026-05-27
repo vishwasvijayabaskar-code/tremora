@@ -103,6 +103,28 @@ a:hover {
   }
 }
 
+/* Hero letter animation base state */
+.hero-chrome-letter {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+/* Smooth hover underline for nav links */
+.hero-nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--text-primary);
+  transition: width 0.3s cubic-bezier(0.22,1,0.36,1);
+}
+
+.hero-nav-link:hover::after {
+  width: 100%;
+}
+
 /* Responsive grid utilities — override inline styles */
 @media (max-width: 900px) {
   .grid-responsive {

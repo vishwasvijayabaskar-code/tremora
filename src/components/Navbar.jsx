@@ -95,6 +95,7 @@ export default function Navbar() {
         ))}
         <a
           href="#waitlist"
+          data-cursor-magnetic
           onClick={(e) => scrollTo(e, '#waitlist')}
           style={{
             fontSize: scrolled ? '0.75rem' : '0.8rem',

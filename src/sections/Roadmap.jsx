@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import PerspectiveTilt from '../components/PerspectiveTilt'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -46,7 +47,9 @@ function RoadmapCard({ card, index }) {
   const [hovered, setHovered] = useState(false)
 
   return (
+    <PerspectiveTilt maxRotateX={5} maxRotateY={10} smoothing={0.08}>
     <div
+      data-cursor-hover
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
@@ -122,6 +125,7 @@ function RoadmapCard({ card, index }) {
         {String(index + 1).padStart(2, '0')}
       </div>
     </div>
+    </PerspectiveTilt>
   )
 }
 
@@ -204,7 +208,7 @@ export default function Roadmap() {
             margin: '20px auto 0',
             lineHeight: 1.7,
           }}>
-            TremoTrack is early-stage clinical technology. Here's what we're working on next.
+            Tremora is early-stage clinical technology. Here's what we're working on next.
           </p>
         </div>
       </div>

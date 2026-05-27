@@ -166,7 +166,7 @@ export default function Device() {
             marginBottom: '20px',
           }}>
             <span>What's inside</span><br />
-            <span style={{ color: 'var(--text-muted)' }}>TremoTrack v1.</span>
+            <span style={{ color: 'var(--text-muted)' }}>Tremora v1.</span>
           </h2>
           <p style={{
             color: 'var(--text-secondary)',
@@ -221,7 +221,7 @@ export default function Device() {
               fontWeight: 700,
               color: 'var(--text-primary)',
             }}>
-              TremoTrack v1
+              Tremora v1
             </span>
             <span style={{ fontSize: '0.55rem', color: 'var(--text-secondary)', letterSpacing: '0.05em' }}>
               ~50×30×12mm

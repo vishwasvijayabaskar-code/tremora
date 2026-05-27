@@ -75,6 +75,7 @@ export default function Button({ children, variant = 'primary', href, onClick, s
       onClick={onClick}
       onMouseEnter={handleEnter}
       onMouseLeave={handleLeave}
+      data-cursor-magnetic
       style={{ ...styles[variant], ...extraStyle }}
     >
       {children}

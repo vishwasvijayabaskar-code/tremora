@@ -7,12 +7,14 @@ import ChromeObjects from '../components/ChromeObjects'
 gsap.registerPlugin(ScrollTrigger)
 
 const heroObjects = [
-  { type: 'pill', position: [-4.2, 2.2, -0.3], scale: 0.45, speed: 0.5 },
-  { type: 'torus', position: [4.5, -1.8, -0.2], scale: 0.5, speed: 0.35 },
-  { type: 'pulse', position: [-3.5, -2.5, -0.5], scale: 0.35, speed: 0.45 },
-  { type: 'brain', position: [3.8, 2.5, -0.4], scale: 0.35, speed: 0.3 },
-  { type: 'pill', position: [1.5, 3.2, -0.6], scale: 0.25, speed: 0.6 },
-  { type: 'torus', position: [-1.8, -3.2, -0.3], scale: 0.3, speed: 0.4 },
+  { type: 'pill', position: [-5, 2.8, 0.5], scale: 0.6, speed: 0.5 },
+  { type: 'torus', position: [5.2, -2, 0.3], scale: 0.65, speed: 0.35 },
+  { type: 'pulse', position: [-4.2, -2.8, 0.2], scale: 0.5, speed: 0.45 },
+  { type: 'brain', position: [4.5, 3, 0.4], scale: 0.5, speed: 0.3 },
+  { type: 'pill', position: [2, 3.8, -0.3], scale: 0.35, speed: 0.6 },
+  { type: 'torus', position: [-2.2, -3.8, 0.1], scale: 0.4, speed: 0.4 },
+  { type: 'pulse', position: [-1, 3.2, 0.6], scale: 0.3, speed: 0.55 },
+  { type: 'brain', position: [1.5, -3.5, 0.2], scale: 0.3, speed: 0.5 },
 ]
 
 const chromeTextStyle = {
@@ -23,11 +25,11 @@ const chromeTextStyle = {
   lineHeight: 0.85,
   letterSpacing: '-0.03em',
   textTransform: 'none',
-  background: 'linear-gradient(180deg, #e8e8e8 0%, #b8b8b8 25%, #e0e0e0 40%, #999 55%, #c8c8c8 70%, #aaa 85%, #d0d0d0 100%)',
+  background: 'linear-gradient(180deg, #f0f0f0 0%, #c8c8c8 15%, #e8e8e8 30%, #a0a0a0 50%, #d0d0d0 65%, #b0b0b0 80%, #e0e0e0 100%)',
   WebkitBackgroundClip: 'text',
   backgroundClip: 'text',
   WebkitTextFillColor: 'transparent',
-  filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))',
+  filter: 'drop-shadow(0 1px 0px rgba(255,255,255,0.4)) drop-shadow(0 -1px 0px rgba(0,0,0,0.15)) drop-shadow(0 4px 8px rgba(0,0,0,0.08))',
   textShadow: 'none',
   position: 'relative',
 }
@@ -48,13 +50,13 @@ export default function Hero() {
         delay: 0.3,
       })
 
-      // Title letters stagger
-      tl.from('.hero-chrome-line', {
-        yPercent: 120,
-        rotateX: -60,
+      // Title letters stagger with 3D flip
+      tl.from('.hero-chrome-letter', {
+        yPercent: 140,
+        rotateX: -90,
         opacity: 0,
-        duration: 1.8,
-        stagger: 0.15,
+        duration: 1.6,
+        stagger: 0.06,
         ease: 'power4.out',
       })
       .from('.hero-nav-link', {
@@ -62,16 +64,20 @@ export default function Hero() {
         opacity: 0,
         duration: 0.6,
         stagger: 0.08,
-      }, '-=0.8')
+      }, '-=0.6')
       .from(subtitleRef.current, {
         y: 40,
         opacity: 0,
         duration: 1,
       }, '-=0.4')
-      .from(ctaRef.current?.children || [], {
+      .fromTo(ctaRef.current?.children || [], {
         y: 30,
-        opacity: 0,
+        autoAlpha: 0,
         scale: 0.95,
+      }, {
+        y: 0,
+        autoAlpha: 1,
+        scale: 1,
         duration: 0.7,
         stagger: 0.1,
       }, '-=0.5')
@@ -84,8 +90,8 @@ export default function Hero() {
 
       // Scroll-linked parallax
       gsap.to(titleRef.current, {
-        y: -120,
-        scale: 0.9,
+        y: -150,
+        scale: 0.85,
         scrollTrigger: {
           trigger: sectionRef.current,
           start: 'top top',
@@ -108,6 +114,8 @@ export default function Hero() {
 
     return () => ctx.revert()
   }, [])
+
+  const titleLetters = 'tremora'.split('')
 
   return (
     <section ref={sectionRef} style={{
@@ -140,7 +148,7 @@ export default function Hero() {
 
       <ChromeObjects objects={heroObjects} />
 
-      {/* Chrome Title — Full viewport width */}
+      {/* Chrome Title — Per-letter animation */}
       <div ref={titleRef} style={{
         position: 'relative',
         zIndex: 3,
@@ -152,18 +160,44 @@ export default function Hero() {
           perspective: '1200px',
           transformStyle: 'preserve-3d',
         }}>
-          <div style={{ overflow: 'hidden', paddingBottom: '12px' }}>
-            <div className="hero-chrome-line" style={{
-              ...chromeTextStyle,
-              transformOrigin: 'bottom center',
+          <div style={{ overflow: 'hidden', paddingBottom: '16px' }}>
+            <div style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'baseline',
+              gap: '0',
             }}>
-              tremora
+              {titleLetters.map((letter, i) => (
+                <span
+                  key={i}
+                  className="hero-chrome-letter"
+                  style={{
+                    ...chromeTextStyle,
+                    transformOrigin: 'bottom center',
+                    display: 'inline-block',
+                  }}
+                >
+                  {letter}
+                </span>
+              ))}
             </div>
           </div>
         </div>
+
+        {/* Tagline under title */}
+        <div style={{
+          fontSize: '0.7rem',
+          textTransform: 'uppercase',
+          letterSpacing: '0.35em',
+          color: 'var(--text-muted)',
+          fontWeight: 500,
+          marginTop: '8px',
+        }}>
+          Continuous tremor intelligence
+        </div>
       </div>
 
-      {/* Nav links under title — like hildenkaira */}
+      {/* Nav links under title */}
       <div ref={navLinksRef} style={{
         display: 'flex',
         gap: '40px',
@@ -172,10 +206,15 @@ export default function Hero() {
         position: 'relative',
         zIndex: 4,
       }}>
-        {['Our approach', 'Device', 'Team', 'Research'].map((label, i) => (
+        {[
+          { label: 'How it works', href: '#how-it-works' },
+          { label: 'Technology', href: '#features' },
+          { label: 'Device', href: '#device' },
+          { label: 'Team', href: '#team' },
+        ].map((item, i) => (
           <a
             key={i}
-            href={`#${label.toLowerCase().replace(/\s/g, '-')}`}
+            href={item.href}
             className="hero-nav-link"
             data-cursor-text="View"
             style={{
@@ -184,11 +223,12 @@ export default function Hero() {
               fontWeight: 400,
               letterSpacing: '0.01em',
               transition: 'color 0.3s ease',
+              position: 'relative',
             }}
             onMouseEnter={e => e.target.style.color = 'var(--text-primary)'}
             onMouseLeave={e => e.target.style.color = 'var(--text-secondary)'}
           >
-            {label}
+            {item.label}
           </a>
         ))}
       </div>

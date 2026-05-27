@@ -125,7 +125,7 @@ export default function CTA() {
               lineHeight: 0.95,
               letterSpacing: '-0.03em',
             }}>
-              Get TremoTrack<br />before GA.
+              Get Tremora<br />before GA.
             </h2>
             <p style={{
               color: 'rgba(255,234,204,0.5)',
