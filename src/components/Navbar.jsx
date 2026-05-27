@@ -21,7 +21,7 @@ export default function Navbar() {
     })
 
     const onScroll = () => setScrolled(window.scrollY > 80)
-    window.addEventListener('scroll', onScroll)
+    window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
@@ -36,28 +36,33 @@ export default function Navbar() {
       ref={navRef}
       style={{
         position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
+        top: scrolled ? '12px' : '0',
+        left: scrolled ? '50%' : '0',
+        right: scrolled ? 'auto' : '0',
+        transform: scrolled ? 'translateX(-50%)' : 'none',
+        width: scrolled ? 'min(90vw, 900px)' : '100%',
         zIndex: 100,
-        padding: scrolled ? '14px 48px' : '24px 48px',
+        padding: scrolled ? '12px 28px' : '22px 48px',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
         transition: 'all 0.5s cubic-bezier(0.22,1,0.36,1)',
-        background: scrolled ? 'rgba(13,13,13,0.92)' : 'transparent',
-        backdropFilter: scrolled ? 'blur(20px)' : 'none',
-        borderBottom: scrolled ? '1px solid rgba(255,234,204,0.06)' : '1px solid transparent',
+        background: scrolled ? 'rgba(13,13,13,0.85)' : 'transparent',
+        backdropFilter: scrolled ? 'blur(24px) saturate(180%)' : 'none',
+        WebkitBackdropFilter: scrolled ? 'blur(24px) saturate(180%)' : 'none',
+        borderRadius: scrolled ? 'var(--radius-pill)' : '0',
+        border: scrolled ? '1px solid rgba(255,234,204,0.08)' : '1px solid transparent',
+        boxShadow: scrolled ? '0 4px 24px rgba(0,0,0,0.12)' : 'none',
       }}
     >
       <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }) }} style={{
         fontFamily: 'var(--font-display)',
-        fontSize: '1.6rem',
+        fontSize: scrolled ? '1.3rem' : '1.6rem',
         fontWeight: 400,
         textTransform: 'uppercase',
         letterSpacing: '-0.02em',
         color: scrolled ? 'var(--cream)' : 'var(--text-primary)',
-        transition: 'color 0.4s ease',
+        transition: 'all 0.4s ease',
       }}>
         Tremora
       </a>
@@ -65,7 +70,8 @@ export default function Navbar() {
       <div style={{
         display: 'flex',
         alignItems: 'center',
-        gap: '32px',
+        gap: scrolled ? '24px' : '32px',
+        transition: 'gap 0.4s ease',
       }}>
         {navLinks.map(link => (
           <a
@@ -73,11 +79,11 @@ export default function Navbar() {
             href={link.href}
             onClick={(e) => scrollTo(e, link.href)}
             style={{
-              fontSize: '0.8rem',
+              fontSize: scrolled ? '0.75rem' : '0.8rem',
               color: scrolled ? 'rgba(255,234,204,0.6)' : 'var(--text-secondary)',
               fontWeight: 400,
               letterSpacing: '0.02em',
-              transition: 'color 0.3s',
+              transition: 'color 0.3s, font-size 0.4s',
               textTransform: 'uppercase',
             }}
             onMouseEnter={e => e.target.style.color = scrolled ? 'var(--cream)' : 'var(--text-primary)'}
@@ -90,13 +96,13 @@ export default function Navbar() {
           href="#waitlist"
           onClick={(e) => scrollTo(e, '#waitlist')}
           style={{
-            fontSize: '0.8rem',
+            fontSize: scrolled ? '0.75rem' : '0.8rem',
             fontWeight: 500,
             color: scrolled ? 'var(--dark)' : 'white',
             background: scrolled ? 'var(--cream)' : 'var(--text-primary)',
-            padding: '10px 22px',
+            padding: scrolled ? '8px 18px' : '10px 22px',
             borderRadius: 'var(--radius-pill)',
-            transition: 'all 0.3s ease',
+            transition: 'all 0.4s ease',
             textTransform: 'uppercase',
             letterSpacing: '0.02em',
           }}

@@ -46,16 +46,19 @@ export default function Button({ children, variant = 'primary', href, onClick, s
     btnRef.current.style.transform = 'scale(1.04)'
     if (variant === 'primary') {
       btnRef.current.style.background = 'var(--coral)'
+      btnRef.current.style.boxShadow = '0 8px 32px rgba(251,79,98,0.25)'
     } else if (variant === 'secondary') {
       btnRef.current.style.borderColor = 'var(--text-primary)'
       btnRef.current.style.background = 'var(--text-primary)'
       btnRef.current.style.color = 'white'
+      btnRef.current.style.boxShadow = '0 8px 24px rgba(26,26,26,0.15)'
     }
   }
 
   const handleLeave = () => {
     if (!btnRef.current) return
     btnRef.current.style.transform = 'scale(1)'
+    btnRef.current.style.boxShadow = 'none'
     if (variant === 'primary') {
       btnRef.current.style.background = 'var(--text-primary)'
     } else if (variant === 'secondary') {
