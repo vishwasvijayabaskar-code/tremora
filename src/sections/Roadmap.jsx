@@ -192,13 +192,13 @@ export default function Roadmap() {
       gsap.to(track, {
         x: () => -getScroll(),
         ease: 'none',
+        force3D: true,
         scrollTrigger: {
           trigger: wrapperRef.current,
           start: 'top top',
           end: () => `+=${getScroll()}`,
           scrub: true,
           pin: true,
-          anticipatePin: 1,
           invalidateOnRefresh: true,
         },
       })
@@ -209,9 +209,30 @@ export default function Roadmap() {
     window.addEventListener('load', refresh)
     const t = setTimeout(refresh, 400)
 
+    // While scrolling, the track slides under the cursor and Chrome fires a
+    // synthetic mousemove every frame -> card hover state + PerspectiveTilt
+    // both churn mid-scroll (re-render + box-shadow paint = jank). Disable
+    // pointer hits on the track during motion, restore when it stops.
+    let lenis = null
+    let idleT = null
+    const onScroll = () => {
+      const track = trackRef.current
+      if (!track) return
+      track.style.pointerEvents = 'none'
+      clearTimeout(idleT)
+      idleT = setTimeout(() => { track.style.pointerEvents = 'auto' }, 140)
+    }
+    const attach = setTimeout(() => {
+      lenis = window.__lenis
+      lenis?.on('scroll', onScroll)
+    }, 0)
+
     return () => {
       window.removeEventListener('load', refresh)
       clearTimeout(t)
+      clearTimeout(attach)
+      clearTimeout(idleT)
+      lenis?.off('scroll', onScroll)
       ctx.revert()
     }
   }, [])
@@ -269,6 +290,7 @@ export default function Roadmap() {
             paddingLeft: 'max(24px, calc((100vw - 1200px) / 2))',
             paddingRight: 'max(48px, calc((100vw - 1200px) / 2))',
             width: 'max-content',
+            willChange: 'transform',
           }}
         >
           {cards.map((card, i) => (
