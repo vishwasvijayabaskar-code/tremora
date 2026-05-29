@@ -196,7 +196,7 @@ export default function Roadmap() {
           trigger: wrapperRef.current,
           start: 'top top',
           end: () => `+=${getScroll()}`,
-          scrub: 1,
+          scrub: true,
           pin: true,
           anticipatePin: 1,
           invalidateOnRefresh: true,
