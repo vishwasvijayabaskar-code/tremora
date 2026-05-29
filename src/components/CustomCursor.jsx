@@ -1,136 +1,68 @@
 import { useEffect, useRef } from 'react'
 
+/**
+ * Sensor reticle cursor — a camera-focus frame (4 corner brackets) that slowly
+ * spins around a coral center dot, then "locks on" (contracts + spins faster +
+ * brightens) over any interactive element. On-brand for a targeting/sensor
+ * device. Frame lags the dot for a bit of trailing weight.
+ */
 export default function CustomCursor() {
-  const cursorRef = useRef(null)
-  const trailRef = useRef(null)
+  const dotRef = useRef(null)
+  const reticleRef = useRef(null)
   const textRef = useRef(null)
-  const glowRef = useRef(null)
   const pos = useRef({ x: -100, y: -100 })
-  const cursorPos = useRef({ x: -100, y: -100 })
-  const trailPos = useRef({ x: -100, y: -100 })
+  const dotPos = useRef({ x: -100, y: -100 })
+  const retPos = useRef({ x: -100, y: -100 })
   const hovering = useRef(false)
-  const hoverText = useRef('')
-  const velocity = useRef({ x: 0, y: 0 })
-  const prevPos = useRef({ x: -100, y: -100 })
+  const spin = useRef(0)
+  const lock = useRef(0) // eased 0->1 lock-on factor
   const raf = useRef(null)
-  const magnetTarget = useRef(null)
 
   useEffect(() => {
     const onMove = (e) => {
-      velocity.current = {
-        x: e.clientX - pos.current.x,
-        y: e.clientY - pos.current.y,
-      }
       pos.current = { x: e.clientX, y: e.clientY }
-
-      // Check magnetic pull on interactive elements
-      const magnetEls = document.querySelectorAll('[data-cursor-magnetic]')
-      let closest = null
-      let closestDist = 80
-
-      magnetEls.forEach(el => {
-        const r = el.getBoundingClientRect()
-        const cx = r.left + r.width / 2
-        const cy = r.top + r.height / 2
-        const dist = Math.hypot(e.clientX - cx, e.clientY - cy)
-        if (dist < closestDist) {
-          closest = { x: cx, y: cy, el, dist }
-          closestDist = dist
-        }
-      })
-
-      magnetTarget.current = closest
     }
 
     const onEnter = (e) => {
       hovering.current = true
-      hoverText.current = e.target.dataset?.cursorText || ''
-      if (cursorRef.current) {
-        cursorRef.current.style.width = '48px'
-        cursorRef.current.style.height = '48px'
-        cursorRef.current.style.mixBlendMode = 'difference'
-        cursorRef.current.style.background = 'white'
-        cursorRef.current.style.borderRadius = '50%'
-      }
-      if (trailRef.current) {
-        trailRef.current.style.opacity = '0'
-      }
-      if (glowRef.current) {
-        glowRef.current.style.opacity = '0.3'
-        glowRef.current.style.width = '80px'
-        glowRef.current.style.height = '80px'
-      }
+      const label = e.currentTarget.dataset?.cursorText || ''
       if (textRef.current) {
-        textRef.current.style.opacity = hoverText.current ? '1' : '0'
-        textRef.current.textContent = hoverText.current
+        textRef.current.textContent = label
+        textRef.current.style.opacity = label ? '1' : '0'
       }
     }
 
     const onLeave = () => {
       hovering.current = false
-      hoverText.current = ''
-      if (cursorRef.current) {
-        cursorRef.current.style.width = '10px'
-        cursorRef.current.style.height = '10px'
-        cursorRef.current.style.mixBlendMode = 'normal'
-        cursorRef.current.style.background = 'var(--coral)'
-        cursorRef.current.style.borderRadius = '50%'
-      }
-      if (trailRef.current) {
-        trailRef.current.style.opacity = '0.35'
-      }
-      if (glowRef.current) {
-        glowRef.current.style.opacity = '0'
-        glowRef.current.style.width = '40px'
-        glowRef.current.style.height = '40px'
-      }
-      if (textRef.current) {
-        textRef.current.style.opacity = '0'
-      }
+      if (textRef.current) textRef.current.style.opacity = '0'
     }
 
     const animate = () => {
-      // Smooth cursor with velocity-based stretch
-      cursorPos.current.x += (pos.current.x - cursorPos.current.x) * 0.85
-      cursorPos.current.y += (pos.current.y - cursorPos.current.y) * 0.85
-      trailPos.current.x += (pos.current.x - trailPos.current.x) * 0.1
-      trailPos.current.y += (pos.current.y - trailPos.current.y) * 0.1
+      dotPos.current.x += (pos.current.x - dotPos.current.x) * 0.9
+      dotPos.current.y += (pos.current.y - dotPos.current.y) * 0.9
+      retPos.current.x += (pos.current.x - retPos.current.x) * 0.18
+      retPos.current.y += (pos.current.y - retPos.current.y) * 0.18
 
-      // Velocity-based shape distortion
-      const vx = cursorPos.current.x - prevPos.current.x
-      const vy = cursorPos.current.y - prevPos.current.y
-      const speed = Math.hypot(vx, vy)
-      const angle = Math.atan2(vy, vx) * (180 / Math.PI)
-      const stretch = Math.min(speed * 0.15, 0.5)
-      prevPos.current = { ...cursorPos.current }
+      lock.current += ((hovering.current ? 1 : 0) - lock.current) * 0.15
+      spin.current += 0.4 + lock.current * 1.6
 
-      // Magnetic pull
-      let targetX = cursorPos.current.x
-      let targetY = cursorPos.current.y
-      if (magnetTarget.current && !hovering.current) {
-        const pull = 1 - (magnetTarget.current.dist / 80)
-        targetX = cursorPos.current.x + (magnetTarget.current.x - cursorPos.current.x) * pull * 0.3
-        targetY = cursorPos.current.y + (magnetTarget.current.y - cursorPos.current.y) * pull * 0.3
-      }
+      const retScale = 1 - lock.current * 0.32
+      const dotScale = 1 - lock.current * 0.5
 
-      if (cursorRef.current) {
-        const scaleX = hovering.current ? 1 : 1 + stretch
-        const scaleY = hovering.current ? 1 : 1 - stretch * 0.3
-        cursorRef.current.style.left = `${targetX}px`
-        cursorRef.current.style.top = `${targetY}px`
-        cursorRef.current.style.transform = `translate(-50%, -50%) rotate(${hovering.current ? 0 : angle}deg) scaleX(${scaleX}) scaleY(${scaleY})`
+      if (dotRef.current) {
+        dotRef.current.style.left = `${dotPos.current.x}px`
+        dotRef.current.style.top = `${dotPos.current.y}px`
+        dotRef.current.style.transform = `translate(-50%,-50%) scale(${dotScale.toFixed(3)})`
       }
-      if (trailRef.current) {
-        trailRef.current.style.left = `${trailPos.current.x}px`
-        trailRef.current.style.top = `${trailPos.current.y}px`
-      }
-      if (glowRef.current) {
-        glowRef.current.style.left = `${targetX}px`
-        glowRef.current.style.top = `${targetY}px`
+      if (reticleRef.current) {
+        reticleRef.current.style.left = `${retPos.current.x}px`
+        reticleRef.current.style.top = `${retPos.current.y}px`
+        reticleRef.current.style.transform = `translate(-50%,-50%) rotate(${spin.current.toFixed(1)}deg) scale(${retScale.toFixed(3)})`
+        reticleRef.current.style.opacity = (0.55 + lock.current * 0.45).toFixed(3)
       }
       if (textRef.current) {
-        textRef.current.style.left = `${targetX}px`
-        textRef.current.style.top = `${targetY + 32}px`
+        textRef.current.style.left = `${retPos.current.x}px`
+        textRef.current.style.top = `${retPos.current.y + 30}px`
       }
 
       raf.current = requestAnimationFrame(animate)
@@ -139,17 +71,17 @@ export default function CustomCursor() {
     window.addEventListener('mousemove', onMove)
     raf.current = requestAnimationFrame(animate)
 
-    const bindHovers = () => {
-      document.querySelectorAll('a, button, [data-cursor-hover]').forEach(el => {
+    const bind = () => {
+      document.querySelectorAll('a, button, [data-cursor-hover]').forEach((el) => {
         el.removeEventListener('mouseenter', onEnter)
         el.removeEventListener('mouseleave', onLeave)
         el.addEventListener('mouseenter', onEnter)
         el.addEventListener('mouseleave', onLeave)
       })
     }
-    bindHovers()
+    bind()
 
-    const observer = new MutationObserver(bindHovers)
+    const observer = new MutationObserver(bind)
     observer.observe(document.body, { childList: true, subtree: true })
 
     return () => {
@@ -163,61 +95,54 @@ export default function CustomCursor() {
 
   return (
     <>
-      {/* Glow layer */}
-      <div
-        ref={glowRef}
+      {/* Reticle — 4 corner brackets that spin + lock on */}
+      <svg
+        ref={reticleRef}
+        width="46"
+        height="46"
+        viewBox="0 0 46 46"
         style={{
           position: 'fixed',
           top: 0,
           left: 0,
-          width: 40,
-          height: 40,
-          borderRadius: '50%',
-          background: 'radial-gradient(circle, var(--coral) 0%, transparent 70%)',
           pointerEvents: 'none',
-          zIndex: 9997,
-          transform: 'translate(-50%, -50%)',
-          opacity: 0,
-          transition: 'opacity 0.4s ease, width 0.4s ease, height 0.4s ease',
-          filter: 'blur(8px)',
+          zIndex: 9998,
+          transform: 'translate(-50%,-50%)',
+          opacity: 0.55,
         }}
-      />
-      {/* Main cursor — velocity-stretched dot */}
+      >
+        <g
+          fill="none"
+          stroke="var(--coral)"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M5,15 L5,5 L15,5" />
+          <path d="M41,15 L41,5 L31,5" />
+          <path d="M5,31 L5,41 L15,41" />
+          <path d="M41,31 L41,41 L31,41" />
+        </g>
+      </svg>
+
+      {/* Center dot */}
       <div
-        ref={cursorRef}
+        ref={dotRef}
         style={{
           position: 'fixed',
           top: 0,
           left: 0,
-          width: 10,
-          height: 10,
+          width: 6,
+          height: 6,
           borderRadius: '50%',
           background: 'var(--coral)',
           pointerEvents: 'none',
           zIndex: 9999,
-          transform: 'translate(-50%, -50%)',
-          transition: 'width 0.4s cubic-bezier(0.22,1,0.36,1), height 0.4s cubic-bezier(0.22,1,0.36,1), background 0.3s, mix-blend-mode 0.3s, border-radius 0.3s',
+          transform: 'translate(-50%,-50%)',
         }}
       />
-      {/* Trail — lazy follower ring */}
-      <div
-        ref={trailRef}
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: 36,
-          height: 36,
-          borderRadius: '50%',
-          border: '1px solid var(--coral)',
-          pointerEvents: 'none',
-          zIndex: 9998,
-          transform: 'translate(-50%, -50%)',
-          transition: 'opacity 0.3s ease',
-          opacity: 0.35,
-        }}
-      />
-      {/* Hover text label */}
+
+      {/* Hover label */}
       <div
         ref={textRef}
         style={{
@@ -227,10 +152,10 @@ export default function CustomCursor() {
           transform: 'translateX(-50%)',
           pointerEvents: 'none',
           zIndex: 9999,
-          fontSize: '0.6rem',
-          fontWeight: 600,
+          fontSize: '0.55rem',
+          fontWeight: 700,
           textTransform: 'uppercase',
-          letterSpacing: '0.1em',
+          letterSpacing: '0.18em',
           color: 'var(--coral)',
           opacity: 0,
           transition: 'opacity 0.2s ease',

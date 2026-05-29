@@ -10,6 +10,8 @@ const steps = [
     title: 'Capture',
     description: 'A wrist-worn sensor samples tremor movement at 200Hz continuously throughout the day.',
     techTags: ['MPU-6050 IMU', '6-axis sensing', '200Hz sampling'],
+    metric: '~18 hr',
+    metricLabel: 'active recording per charge',
     visual: 'waveform',
   },
   {
@@ -17,6 +19,8 @@ const steps = [
     title: 'Score',
     description: 'On-device signal processing with FFT analysis and a trained classifier scores tremor severity in real time.',
     techTags: ['FFT analysis', 'Random Forest', 'UPDRS proxy', 'Med logging'],
+    metric: '<50ms',
+    metricLabel: 'per 256-sample window',
     visual: 'processing',
   },
   {
@@ -24,6 +28,8 @@ const steps = [
     title: 'Reveal',
     description: 'A neurologist dashboard surfaces weeks of patterns, showing how tremor responds to each medication dose.',
     techTags: ['Medication response', 'Severity timeline', 'Clinical summary'],
+    metric: 'Weeks',
+    metricLabel: 'of continuous data per visit',
     visual: 'dashboard',
   },
 ]
@@ -195,6 +201,33 @@ function StepCard({ step, index }) {
         }}>
           {step.description}
         </p>
+        <div style={{
+          display: 'flex',
+          alignItems: 'baseline',
+          gap: '10px',
+          marginBottom: '20px',
+          paddingTop: '16px',
+          borderTop: '1px solid rgba(255,234,204,0.08)',
+        }}>
+          <span style={{
+            fontFamily: 'var(--font-display)',
+            fontSize: '1.6rem',
+            color: 'var(--coral)',
+            lineHeight: 1,
+            letterSpacing: '-0.01em',
+          }}>
+            {step.metric}
+          </span>
+          <span style={{
+            fontSize: '0.72rem',
+            color: 'rgba(255,234,204,0.45)',
+            textTransform: 'uppercase',
+            letterSpacing: '0.08em',
+          }}>
+            {step.metricLabel}
+          </span>
+        </div>
+
         <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
           {step.techTags.map((tag, j) => (
             <span key={j} style={{

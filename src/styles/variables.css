@@ -32,4 +32,19 @@
   --radius-lg: 24px;
   --radius-xl: 32px;
   --radius-pill: 999px;
+
+  /* Perspective Highlight presets — tint, glow-ring (rgb triplet), text color */
+  --hl-coral-bg: #FB4F62;
+  --hl-coral-ring: 251, 79, 98;
+  --hl-peach-bg: #F99667;
+  --hl-peach-ring: 249, 150, 103;
+  --hl-cream-bg: #FFEACC;
+  --hl-cream-ring: 255, 234, 204;
+  --hl-lavender-bg: #F0CADE;
+  --hl-lavender-ring: 240, 202, 222;
+}
+
+@keyframes perspective-blur-in {
+  from { opacity: 0; filter: blur(10px); transform: translateY(8px); }
+  to   { opacity: 1; filter: blur(0);    transform: translateY(0); }
 }

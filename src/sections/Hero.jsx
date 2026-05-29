@@ -3,6 +3,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Button from '../components/Button'
 import ChromeObjects from '../components/ChromeObjects'
+import { Perspective, Highlight } from '../components/PerspectiveHighlight'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -241,31 +242,80 @@ export default function Hero() {
         maxWidth: '700px',
         willChange: 'transform, opacity',
       }}>
-        <p ref={subtitleRef} style={{
-          fontFamily: "'Playfair Display', Georgia, serif",
-          fontSize: 'clamp(1.5rem, 3.5vw, 2.8rem)',
-          color: 'var(--text-primary)',
-          fontWeight: 400,
-          fontStyle: 'italic',
-          lineHeight: 1.3,
-          marginBottom: '32px',
-        }}>
-          If your neurologist can't see
-          between visits, they're treating
-          a snapshot — not a patient.
-        </p>
+        <Perspective
+          entrance={false}
+          maxRotateX={9}
+          maxRotateY={16}
+          smoothing={0.12}
+          style={{ marginBottom: '32px' }}
+        >
+          <p ref={subtitleRef} style={{
+            fontFamily: "'Playfair Display', Georgia, serif",
+            fontSize: 'clamp(1.5rem, 3.5vw, 2.8rem)',
+            color: 'var(--text-primary)',
+            fontWeight: 400,
+            fontStyle: 'italic',
+            lineHeight: 1.45,
+            margin: 0,
+          }}>
+            If your neurologist can't see{' '}
+            <Highlight color="coral">between visits</Highlight>,
+            they're treating a{' '}
+            <Highlight color="peach">snapshot</Highlight>, not a patient.
+          </p>
+        </Perspective>
 
         <p style={{
           fontSize: '0.95rem',
           color: 'var(--text-secondary)',
           lineHeight: 1.7,
           maxWidth: '480px',
-          margin: '0 auto 44px',
+          margin: '0 auto 32px',
         }}>
           A wrist-worn sensor that tracks Parkinson's tremor severity 24/7,
           scores it with a trained classifier, and shows neurologists what
           happens between visits.
         </p>
+
+        {/* Highlighted proof strip — lifts toward cursor */}
+        <Perspective
+          entrance={false}
+          maxRotateX={6}
+          maxRotateY={12}
+          smoothing={0.12}
+          style={{ marginBottom: '40px' }}
+        >
+          <div style={{
+            display: 'flex',
+            gap: '10px',
+            justifyContent: 'center',
+            flexWrap: 'wrap',
+          }}>
+            {[
+              { v: '200Hz', l: 'continuous sampling', c: 'coral' },
+              { v: '86.4%', l: 'classifier accuracy', c: 'peach' },
+              { v: '<50ms', l: 'on-device inference', c: 'lavender' },
+            ].map((s, i) => (
+              <span key={i} style={{
+                display: 'inline-flex',
+                alignItems: 'baseline',
+                gap: '8px',
+                fontSize: '0.8rem',
+                color: 'var(--text-secondary)',
+              }}>
+                <Highlight color={s.c} style={{
+                  fontFamily: 'var(--font-display)',
+                  fontSize: '1rem',
+                  letterSpacing: '0.02em',
+                  padding: '2px 9px',
+                }}>
+                  {s.v}
+                </Highlight>
+                {s.l}
+              </span>
+            ))}
+          </div>
+        </Perspective>
 
         <div ref={ctaRef} style={{
           display: 'flex',

@@ -25,21 +25,12 @@ export default function PerspectiveTilt({
     let rotX = 0
     let rotY = 0
     let raf = 0
+    let running = false
 
-    const onMove = (e) => {
-      const r = card.getBoundingClientRect()
-      const dx = (e.clientX - (r.left + r.width / 2)) / (r.width / 2)
-      const dy = (e.clientY - (r.top + r.height / 2)) / (r.height / 2)
-      const dist = Math.hypot(dx, dy)
-      const falloff = dist <= 1 ? 1 : Math.max(0, 1 - (dist - 1) / 2)
-
-      targetX = clamp(dy, -1, 1) * maxRotateX * falloff
-      targetY = -clamp(dx, -1, 1) * maxRotateY * falloff
-    }
-
-    const onLeave = () => {
-      targetX = 0
-      targetY = 0
+    const stop = () => {
+      running = false
+      if (raf) cancelAnimationFrame(raf)
+      raf = 0
     }
 
     const tick = () => {
@@ -48,17 +39,51 @@ export default function PerspectiveTilt({
 
       card.style.transform = `rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg)`
 
+      // settled and returning to rest -> stop the loop so the page can idle
+      const settled =
+        Math.abs(targetX) < 0.01 &&
+        Math.abs(targetY) < 0.01 &&
+        Math.abs(rotX) < 0.05 &&
+        Math.abs(rotY) < 0.05
+
+      if (settled) {
+        card.style.transform = ''
+        stop()
+        return
+      }
       raf = requestAnimationFrame(tick)
     }
 
-    window.addEventListener('mousemove', onMove)
-    document.addEventListener('mouseleave', onLeave)
-    tick()
+    const start = () => {
+      if (running) return
+      running = true
+      raf = requestAnimationFrame(tick)
+    }
+
+    // Scoped to THIS card only — no global listener, so cards don't all
+    // warp together and idle cards burn zero frames.
+    const onMove = (e) => {
+      const r = card.getBoundingClientRect()
+      const dx = (e.clientX - (r.left + r.width / 2)) / (r.width / 2)
+      const dy = (e.clientY - (r.top + r.height / 2)) / (r.height / 2)
+      targetX = clamp(dy, -1, 1) * maxRotateX
+      targetY = -clamp(dx, -1, 1) * maxRotateY
+      start()
+    }
+
+    const onLeave = () => {
+      targetX = 0
+      targetY = 0
+      start()
+    }
+
+    container.addEventListener('mousemove', onMove)
+    container.addEventListener('mouseleave', onLeave)
 
     return () => {
-      window.removeEventListener('mousemove', onMove)
-      document.removeEventListener('mouseleave', onLeave)
-      cancelAnimationFrame(raf)
+      container.removeEventListener('mousemove', onMove)
+      container.removeEventListener('mouseleave', onLeave)
+      stop()
     }
   }, [maxRotateX, maxRotateY, smoothing])
 
