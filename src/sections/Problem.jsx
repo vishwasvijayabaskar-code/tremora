@@ -1,9 +1,6 @@
 import { useRef, useEffect } from 'react'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useCountUp } from '../hooks/useCountUp'
-
-gsap.registerPlugin(ScrollTrigger)
+import Reveal from '../components/Reveal'
 
 function CountStat({ display, style }) {
   const { ref, value } = useCountUp(display)
@@ -11,314 +8,83 @@ function CountStat({ display, style }) {
 }
 
 const stats = [
-  { number: '4×', label: 'yearly visits', sub: 'Average neurologist appointments per year' },
-  { number: '15', label: 'minutes', sub: 'Typical observation window per visit' },
-  { number: '1hr', label: 'per year', sub: 'Total clinical observation time annually' },
-  { number: '90', label: 'day gaps', sub: 'Between medication adjustments' },
+  { number: '4', unit: '×', label: 'YEARLY VISITS', sub: 'Neurologist appointments per year' },
+  { number: '15', unit: 'MIN', label: 'PER VISIT', sub: 'Typical observation window' },
+  { number: '1', unit: 'HR', label: 'PER YEAR', sub: 'Total clinical observation time' },
+  { number: '90', unit: 'DAY', label: 'GAPS', sub: 'Between medication adjustments' },
 ]
 
-function AnimatedWave({ color = 'var(--coral)', height = 60, type = 'snapshot' }) {
+function AnimatedWave({ color, height = 64, type }) {
   const canvasRef = useRef()
-
   useEffect(() => {
     const canvas = canvasRef.current
     const ctx = canvas.getContext('2d')
     canvas.width = canvas.offsetWidth * 2
     canvas.height = height * 2
     ctx.scale(2, 2)
-
-    let frame = 0
-    let animId
+    let frame = 0, animId
     const animate = () => {
       ctx.clearRect(0, 0, canvas.offsetWidth, height)
-      ctx.beginPath()
-      ctx.strokeStyle = color
-      ctx.lineWidth = 2
-
+      ctx.beginPath(); ctx.strokeStyle = color; ctx.lineWidth = 1.5
       const w = canvas.offsetWidth
       for (let x = 0; x < w; x++) {
-        const progress = x / w
-        let y
+        const p = x / w; let y
         if (type === 'snapshot') {
-          const visible = progress > 0.45 && progress < 0.55
-          if (visible) {
-            y = height / 2 + Math.sin(progress * 40 + frame * 0.05) * 15
-          } else {
-            y = height / 2
-            ctx.globalAlpha = 0.15
-          }
+          const vis = p > 0.45 && p < 0.55
+          if (vis) y = height / 2 + Math.sin(p * 40 + frame * 0.05) * 15
+          else { y = height / 2; ctx.globalAlpha = 0.2 }
         } else {
-          y = height / 2 +
-            Math.sin(progress * 8 + frame * 0.03) * 12 +
-            Math.sin(progress * 15 + frame * 0.05) * 8 +
-            Math.sin(progress * 30 + frame * 0.02) * 4
-          ctx.globalAlpha = 0.8
+          y = height / 2 + Math.sin(p * 8 + frame * 0.03) * 12 + Math.sin(p * 15 + frame * 0.05) * 8 + Math.sin(p * 30 + frame * 0.02) * 4
+          ctx.globalAlpha = 0.9
         }
-        if (x === 0) ctx.moveTo(x, y)
-        else ctx.lineTo(x, y)
+        x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y)
       }
-      ctx.stroke()
-      ctx.globalAlpha = 1
-      frame++
+      ctx.stroke(); ctx.globalAlpha = 1; frame++
       animId = requestAnimationFrame(animate)
     }
     animate()
     return () => cancelAnimationFrame(animId)
   }, [color, height, type])
-
-  return (
-    <canvas
-      ref={canvasRef}
-      style={{ width: '100%', height: `${height}px`, display: 'block' }}
-    />
-  )
+  return <canvas ref={canvasRef} style={{ width: '100%', height, display: 'block' }} />
 }
 
 export default function Problem() {
-  const sectionRef = useRef()
-  const headerRef = useRef()
-  const bigNumRef = useRef()
-  const statsRef = useRef()
-  const wavesRef = useRef()
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.from(headerRef.current, {
-        x: -80,
-        opacity: 0,
-        duration: 1.2,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: headerRef.current,
-          start: 'top 80%',
-          toggleActions: 'play none none none',
-        },
-      })
-
-      gsap.from(bigNumRef.current, {
-        scale: 0.5,
-        opacity: 0,
-        duration: 1,
-        ease: 'power2.out',
-        scrollTrigger: {
-          trigger: bigNumRef.current,
-          start: 'top 85%',
-          toggleActions: 'play none none none',
-        },
-      })
-
-      gsap.from(statsRef.current.children, {
-        y: 60,
-        opacity: 0,
-        duration: 0.7,
-        stagger: 0.1,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: statsRef.current,
-          start: 'top 80%',
-          toggleActions: 'play none none none',
-        },
-      })
-
-      gsap.from(wavesRef.current.children, {
-        scale: 0.92,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.15,
-        ease: 'power2.out',
-        scrollTrigger: {
-          trigger: wavesRef.current,
-          start: 'top 85%',
-          toggleActions: 'play none none none',
-        },
-      })
-
-      gsap.to(headerRef.current, {
-        y: -40,
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top center',
-          end: 'bottom top',
-          scrub: 2,
-        },
-      })
-    }, sectionRef)
-
-    return () => ctx.revert()
-  }, [])
-
   return (
-    <section
-      id="problem"
-      ref={sectionRef}
-      style={{
-        padding: 'var(--section-pad) 0',
-        background: 'var(--cream)',
-        position: 'relative',
-      }}
-    >
+    <section id="problem" style={{ background: 'var(--paper)', padding: 'var(--section-pad) 0' }}>
       <div className="container">
-        <div className="grid-responsive" style={{
-          display: 'grid',
-          gridTemplateColumns: '1.2fr 1fr',
-          gap: '60px',
-          alignItems: 'start',
-          marginBottom: '48px',
-        }}>
-          <div ref={headerRef}>
-            <span style={{
-              fontSize: '0.7rem',
-              textTransform: 'uppercase',
-              letterSpacing: '0.2em',
-              color: 'var(--text-muted)',
-              fontWeight: 500,
-              marginBottom: '20px',
-              display: 'block',
-            }}>
-              The Problem
-            </span>
-            <h2 style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(2.2rem, 5vw, 3.8rem)',
-              color: 'var(--text-primary)',
-              letterSpacing: '-0.02em',
-              textTransform: 'uppercase',
-              lineHeight: 1,
-              marginBottom: '24px',
-            }}>
-              <span style={{ color: 'var(--text-primary)' }}>Neurologists make 3-month decisions</span>
-              <br />
-              <span style={{ color: 'var(--text-muted)' }}>from 15-minute snapshots.</span>
-            </h2>
-            <p style={{
-              color: 'var(--text-secondary)',
-              fontSize: '0.95rem',
-              lineHeight: 1.7,
-              maxWidth: '480px',
-            }}>
-              A typical Parkinson's patient sees their neurologist four times a year.
-              Each visit captures roughly 15 minutes of motor behavior. Medication
-              decisions that affect the next 90 days are made from that sliver.
-            </p>
-          </div>
+        <div className="mono-label" style={{ color: 'var(--hazard)', marginBottom: 18 }}>[ 01 / THE PROBLEM ]</div>
+        <Reveal as="h2" variant="lines" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.4rem, 6.5vw, 6rem)', color: 'var(--ink)', lineHeight: 0.9, letterSpacing: '-0.03em', maxWidth: 1100, marginBottom: 24 }}>
+          Neurologists make 3-month decisions from 15-minute snapshots.
+        </Reveal>
+        <Reveal style={{ fontFamily: 'var(--font-sans)', fontSize: '1rem', lineHeight: 1.65, color: 'var(--text-secondary)', maxWidth: 560, textTransform: 'none', marginBottom: 56 }}>
+          A typical Parkinson's patient sees their neurologist four times a year. Each visit captures roughly 15 minutes of motor behavior. Medication decisions that affect the next 90 days are made from that sliver.
+        </Reveal>
 
-          <div ref={bigNumRef} style={{
-            textAlign: 'center',
-            padding: '40px',
-          }}>
-            <CountStat display="1hr" style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(6rem, 12vw, 10rem)',
-              fontWeight: 800,
-              color: 'var(--coral)',
-              lineHeight: 0.85,
-              opacity: 0.15,
-              display: 'block',
-            }} />
-            <div style={{
-              fontSize: '0.8rem',
-              color: 'var(--text-muted)',
-              marginTop: '12px',
-              textTransform: 'uppercase',
-              letterSpacing: '0.15em',
-            }}>
-              Total clinical observation per year
-            </div>
-          </div>
-        </div>
-
-        <div ref={statsRef} className="grid-responsive-2" style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(4, 1fr)',
-          gap: '12px',
-          marginBottom: '48px',
-        }}>
-          {stats.map((stat, i) => (
-            <div
-              key={i}
-              style={{
-                background: i === 0 ? 'var(--lavender-light)' : i === 1 ? 'var(--peach-light)' : i === 2 ? 'var(--cream-light)' : 'var(--coral-light)',
-                borderRadius: 'var(--radius-lg)',
-                padding: '32px 20px',
-                textAlign: 'center',
-              }}
-            >
-              <CountStat display={stat.number} style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: '3rem',
-                fontWeight: 800,
-                color: 'var(--text-primary)',
-                marginBottom: '4px',
-                lineHeight: 1,
-                display: 'block',
-              }} />
-              <div style={{
-                fontSize: '0.85rem',
-                fontWeight: 600,
-                color: 'var(--text-primary)',
-                marginBottom: '6px',
-              }}>
-                {stat.label}
+        {/* telemetry stat grid — hairline dividers via gap:1px on ink bg */}
+        <div className="grid-responsive-2" style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 1, background: 'var(--ink)', border: '1px solid var(--ink)', marginBottom: 1 }}>
+          {stats.map((s, i) => (
+            <Reveal key={i} delay={i * 0.06} style={{ background: 'var(--paper)', padding: '28px 22px' }}>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
+                <CountStat display={s.number} style={{ fontFamily: 'var(--font-display)', fontSize: '3.4rem', color: 'var(--ink)', lineHeight: 0.9 }} />
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.9rem', color: 'var(--hazard)' }}>{s.unit}</span>
               </div>
-              <div style={{
-                fontSize: '0.7rem',
-                color: 'var(--text-secondary)',
-                lineHeight: 1.4,
-              }}>
-                {stat.sub}
-              </div>
-            </div>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.62rem', letterSpacing: '0.12em', color: 'var(--ink)', marginTop: 12 }}>{s.label}</div>
+              <div style={{ fontFamily: 'var(--font-sans)', fontSize: '0.74rem', color: 'var(--text-muted)', marginTop: 6, lineHeight: 1.4, textTransform: 'none' }}>{s.sub}</div>
+            </Reveal>
           ))}
         </div>
 
-        <div ref={wavesRef} className="grid-responsive" style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: '20px',
-          maxWidth: '860px',
-          margin: '0 auto',
-        }}>
-          <div style={{
-            background: 'white',
-            borderRadius: 'var(--radius-xl)',
-            padding: '32px',
-            border: '1px solid rgba(0,0,0,0.06)',
-          }}>
-            <div style={{
-              fontSize: '0.65rem',
-              textTransform: 'uppercase',
-              letterSpacing: '0.15em',
-              color: 'var(--text-muted)',
-              marginBottom: '20px',
-              fontWeight: 500,
-            }}>
-              Current: Clinic Snapshot
-            </div>
-            <AnimatedWave color="var(--text-muted)" height={60} type="snapshot" />
-            <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '14px', lineHeight: 1.5 }}>
-              Brief visibility window. Most tremor data invisible.
-            </p>
+        {/* compare panels */}
+        <div className="grid-responsive" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, background: 'var(--ink)', border: '1px solid var(--ink)', marginTop: 40 }}>
+          <div style={{ background: 'var(--paper)', padding: 32 }}>
+            <div className="mono-label" style={{ marginBottom: 20 }}>CURRENT / CLINIC SNAPSHOT</div>
+            <AnimatedWave color="var(--text-muted)" type="snapshot" />
+            <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.68rem', color: 'var(--text-muted)', marginTop: 14, letterSpacing: '0.02em' }}>BRIEF WINDOW. MOST TREMOR DATA INVISIBLE.</p>
           </div>
-          <div style={{
-            background: 'var(--cream-light)',
-            borderRadius: 'var(--radius-xl)',
-            padding: '32px',
-            border: '2px solid var(--coral)',
-          }}>
-            <div style={{
-              fontSize: '0.65rem',
-              textTransform: 'uppercase',
-              letterSpacing: '0.15em',
-              color: 'var(--coral)',
-              marginBottom: '20px',
-              fontWeight: 600,
-            }}>
-              Tremora: Continuous
-            </div>
-            <AnimatedWave color="var(--coral)" height={60} type="continuous" />
-            <p style={{ fontSize: '0.8rem', color: 'var(--text-primary)', marginTop: '14px', lineHeight: 1.5 }}>
-              Full tremor signal. Every fluctuation captured.
-            </p>
+          <div style={{ background: 'var(--ink)', padding: 32 }}>
+            <div className="mono-label" style={{ marginBottom: 20, color: 'var(--hazard)' }}>TREMORA / CONTINUOUS</div>
+            <AnimatedWave color="var(--hazard)" type="continuous" />
+            <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.68rem', color: 'var(--text-light-2)', marginTop: 14, letterSpacing: '0.02em' }}>FULL SIGNAL. EVERY FLUCTUATION CAPTURED.</p>
           </div>
         </div>
       </div>

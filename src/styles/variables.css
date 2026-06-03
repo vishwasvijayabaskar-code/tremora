@@ -1,50 +1,71 @@
+/* ============================================================
+   TREMORA — Industrial Brutalism / Swiss Tactical Telemetry
+   Carbon ink on unbleached paper. One hazard-red accent.
+   Monospace telemetry. Heavy grotesk macro-type. Square corners.
+   ============================================================ */
 :root {
-  --peach: #F99667;
-  --peach-light: #FDB992;
-  --cream: #FFEACC;
-  --cream-light: #FFF5E8;
-  --lavender: #F0CADE;
-  --lavender-light: #F8E2EE;
-  --coral: #FB4F62;
-  --coral-light: #FD8A96;
-  --dark: #0D0D0D;
-  --dark-surface: #1A1A1A;
-  --dark-elevated: #242424;
+  /* --- Substrate (Swiss Industrial Print, light) --- */
+  --paper:        #F4F4F0;   /* matte documentation paper */
+  --paper-2:      #EAE8E3;   /* recessed panel */
+  --paper-3:      #E0DED7;   /* deeper fill */
+  --ink:          #0A0A0A;   /* carbon ink */
+  --ink-2:        #161616;   /* carbon panel (inverted blocks) */
+  --ink-3:        #242424;   /* elevated carbon */
 
-  --text-primary: #1A1A1A;
-  --text-secondary: #4A4A4A;
-  --text-muted: #7A7A7A;
-  --text-light: #FFEACC;
+  /* --- Single accent: aviation/hazard red --- */
+  --hazard:       #E61919;
+  --hazard-2:     #FF2A2A;
 
-  --font-display: 'Bebas Neue', 'Impact', sans-serif;
-  --font-serif: 'Playfair Display', Georgia, serif;
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  /* --- Text --- */
+  --text-primary:   #0A0A0A;
+  --text-secondary: #3A3A38;
+  --text-muted:     #6E6C66;
+  --text-light:     #F4F4F0;   /* on carbon */
+  --text-light-2:   rgba(244,244,240,0.55);
 
-  /* House ease — the single curve used for every premium transition */
-  --ease: cubic-bezier(0.625, 0.05, 0, 1);
+  /* --- Hairlines / grid --- */
+  --line:        rgba(10,10,10,0.16);
+  --line-strong: rgba(10,10,10,0.5);
+  --line-light:  rgba(244,244,240,0.16);
 
-  --section-pad: clamp(56px, 7vw, 104px);
-  --container: 1200px;
-  --gap-xl: 80px;
-  --gap-lg: 48px;
-  --gap-md: 32px;
-  --gap-sm: 16px;
-  --gap-xs: 8px;
-  --radius-sm: 8px;
-  --radius-md: 16px;
-  --radius-lg: 24px;
-  --radius-xl: 32px;
-  --radius-pill: 999px;
+  /* --- Type --- */
+  --font-display: 'Archivo Black', 'Arial Black', sans-serif;  /* macro headers */
+  --font-sans:    'Space Grotesk', system-ui, sans-serif;       /* body / UI */
+  --font-mono:    'JetBrains Mono', ui-monospace, monospace;    /* telemetry */
+  --font-serif:   'Playfair Display', Georgia, serif;           /* used sparingly */
 
-  /* Perspective Highlight presets — tint, glow-ring (rgb triplet), text color */
-  --hl-coral-bg: #FB4F62;
-  --hl-coral-ring: 251, 79, 98;
-  --hl-peach-bg: #F99667;
-  --hl-peach-ring: 249, 150, 103;
-  --hl-cream-bg: #FFEACC;
-  --hl-cream-ring: 255, 234, 204;
-  --hl-lavender-bg: #F0CADE;
-  --hl-lavender-ring: 240, 202, 222;
+  /* --- Motion --- */
+  --ease:      cubic-bezier(0.625, 0.05, 0, 1);
+  --ease-out:  cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* --- Geometry: brutalism rejects radius --- */
+  --radius-sm: 0; --radius-md: 0; --radius-lg: 0; --radius-xl: 0; --radius-pill: 0;
+
+  /* --- Rhythm --- */
+  --section-pad: clamp(72px, 10vw, 160px);
+  --container: 1280px;
+  --gap-xl: 80px; --gap-lg: 48px; --gap-md: 32px; --gap-sm: 16px; --gap-xs: 8px;
+
+  /* ---------- LEGACY ALIASES ----------
+     Old components reference these names. Remap them onto the new
+     brutalist palette so nothing renders pastel during migration. */
+  --coral: var(--hazard);
+  --coral-light: rgba(230,25,25,0.14);
+  --peach: var(--ink);
+  --peach-light: var(--paper-2);
+  --cream: var(--paper);
+  --cream-light: var(--paper);
+  --lavender: var(--paper-2);
+  --lavender-light: var(--paper-2);
+  --dark: var(--ink);
+  --dark-surface: var(--ink-2);
+  --dark-elevated: var(--ink-3);
+
+  /* Highlight presets remap to hazard / carbon (no pastels) */
+  --hl-coral-bg: var(--hazard);      --hl-coral-ring: 230, 25, 25;
+  --hl-peach-bg: var(--ink);         --hl-peach-ring: 10, 10, 10;
+  --hl-cream-bg: var(--paper-2);     --hl-cream-ring: 110, 108, 102;
+  --hl-lavender-bg: var(--ink-2);    --hl-lavender-ring: 36, 36, 36;
 }
 
 @keyframes perspective-blur-in {

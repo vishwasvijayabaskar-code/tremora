@@ -1,84 +1,32 @@
 const items = [
-  'Continuous Monitoring',
-  '200Hz Sampling',
-  'On-Device ML',
-  'UPDRS Scoring',
-  'Parkinson\'s Care',
-  '86.4% Accuracy',
-  'ESP32 Powered',
-  'FDA Pathway',
-  'Real-Time Scoring',
-  'Clinical Grade',
+  'CONTINUOUS MONITORING', '200HZ SAMPLING', 'ON-DEVICE ML', 'UPDRS SCORING',
+  "PARKINSON'S CARE", '86.4% ACCURACY', 'ESP32 POWERED', 'FDA PATHWAY',
+  'REAL-TIME SCORING', 'CLINICAL GRADE',
 ]
 
-const keyframes = `
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-`
+const keyframes = `@keyframes tmMarquee { from { transform: translateX(0) } to { transform: translateX(-50%) } }`
 
-function MarqueeRow({ speed = 30 }) {
+export default function Marquee() {
   const doubled = [...items, ...items]
   return (
     <div style={{
-      display: 'flex',
-      animation: `marquee ${speed}s linear infinite`,
-      width: 'max-content',
-    }}>
-      {doubled.map((item, i) => (
-        <span key={i} style={{
-          fontFamily: 'var(--font-display)',
-          fontSize: '0.8rem',
-          textTransform: 'uppercase',
-          letterSpacing: '0.18em',
-          color: 'var(--cream)',
-          whiteSpace: 'nowrap',
-          padding: '0 32px',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '32px',
-          opacity: 0.7,
-        }}>
-          {item}
-          <span style={{ color: 'var(--coral)', fontSize: '0.35rem', opacity: 0.8 }}>◆</span>
-        </span>
-      ))}
-    </div>
-  )
-}
-
-export default function Marquee() {
-  return (
-    <div style={{
-      background: 'var(--dark)',
-      padding: '20px 0',
-      overflow: 'hidden',
-      position: 'relative',
+      background: 'var(--ink)', color: 'var(--paper)',
+      padding: '14px 0', overflow: 'hidden',
+      borderTop: '1px solid var(--line-light)', borderBottom: '1px solid var(--line-light)',
     }}>
       <style>{keyframes}</style>
-      {/* Gradient fade edges */}
-      <div style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        bottom: 0,
-        width: '120px',
-        background: 'linear-gradient(to right, var(--dark), transparent)',
-        zIndex: 2,
-        pointerEvents: 'none',
-      }} />
-      <div style={{
-        position: 'absolute',
-        top: 0,
-        right: 0,
-        bottom: 0,
-        width: '120px',
-        background: 'linear-gradient(to left, var(--dark), transparent)',
-        zIndex: 2,
-        pointerEvents: 'none',
-      }} />
-      <MarqueeRow speed={35} />
+      <div style={{ display: 'flex', width: 'max-content', animation: 'tmMarquee 38s linear infinite' }}>
+        {doubled.map((item, i) => (
+          <span key={i} style={{
+            display: 'flex', alignItems: 'center', gap: 28, padding: '0 28px',
+            fontFamily: 'var(--font-mono)', fontSize: '0.72rem', letterSpacing: '0.16em',
+            whiteSpace: 'nowrap', color: 'var(--paper)',
+          }}>
+            {item}
+            <span style={{ color: 'var(--hazard)' }}>+</span>
+          </span>
+        ))}
+      </div>
     </div>
   )
 }

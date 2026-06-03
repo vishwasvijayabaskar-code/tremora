@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Playfair+Display:ital@0;1&display=swap');
 @import './styles/variables.css';
 
 *, *::before, *::after {
@@ -16,138 +16,91 @@ html {
 body {
   font-family: var(--font-sans);
   color: var(--text-primary);
-  background: var(--cream);
+  background: var(--paper);
   overflow-x: hidden;
   cursor: none;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: none; border: none; background: none; }
+img { max-width: 100%; display: block; }
 
-button {
-  font-family: inherit;
-  cursor: none;
-  border: none;
-  background: none;
-}
-
-img {
-  max-width: 100%;
-  display: block;
-}
-
+/* Macro typography — heavy grotesk, uppercase, tight, compressed leading */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
-  font-weight: 700;
-  line-height: 1.05;
+  font-weight: 400;
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
 }
 
-p {
-  line-height: 1.75;
-  font-size: 0.95rem;
-  letter-spacing: 0.01em;
+p { line-height: 1.65; font-size: 0.95rem; }
+
+/* Telemetry label — monospace, uppercase, spaced (use className="mono-label") */
+.mono-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--text-muted);
 }
 
 .container {
   max-width: var(--container);
   margin: 0 auto;
-  padding: 0 clamp(24px, 5vw, 64px);
+  padding: 0 clamp(20px, 5vw, 56px);
 }
 
-::selection {
-  background: var(--coral);
-  color: white;
-}
+::selection { background: var(--hazard); color: var(--paper); }
+::-webkit-scrollbar { display: none; }
 
-::-webkit-scrollbar {
-  display: none;
-}
-
-/* Premium grain overlay */
+/* Film grain — fixed, pointer-events none (perf-safe) */
 body::after {
   content: '';
-  position: fixed;
-  inset: 0;
+  position: fixed; inset: 0;
   pointer-events: none;
   z-index: 9999;
-  opacity: 0.025;
+  opacity: 0.04;
+  mix-blend-mode: multiply;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
 }
 
-/* Smooth section transitions */
-section {
-  will-change: transform;
+/* Brutalist helpers */
+.hairline { border: 1px solid var(--line); }
+.rule { width: 100%; height: 1px; background: var(--line); }
+.rule-strong { width: 100%; height: 2px; background: var(--ink); }
+.crosshair { position: relative; }
+.crosshair::before, .crosshair::after {
+  content: '+'; position: absolute; font-family: var(--font-mono);
+  color: var(--hazard); font-size: 1rem; line-height: 1;
 }
 
-/* Focus styles for accessibility */
-input:focus {
-  border-color: var(--coral) !important;
-  box-shadow: 0 0 0 3px rgba(251, 79, 98, 0.1) !important;
-}
+section { will-change: transform; }
+input:focus { outline: 2px solid var(--hazard); outline-offset: 2px; }
 
-/* Link hover transition */
-a {
-  transition: color 0.2s ease, opacity 0.2s ease;
-}
+.hero-chrome-letter { will-change: transform, opacity; backface-visibility: hidden; }
 
-a:hover {
-  opacity: 0.8;
-}
-
-/* Mobile: hide custom cursor, restore default */
-@media (max-width: 768px) {
-  body, button {
-    cursor: auto !important;
-  }
-}
-
-/* Hero letter animation base state */
-.hero-chrome-letter {
-  will-change: transform, opacity;
-  backface-visibility: hidden;
-}
-
-/* Smooth hover underline for nav links */
+/* Hero in-page nav underline (legacy) */
 .hero-nav-link::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 0;
-  width: 0;
-  height: 1px;
-  background: var(--text-primary);
-  transition: width 0.3s cubic-bezier(0.22,1,0.36,1);
+  content: ''; position: absolute; bottom: -4px; left: 0;
+  width: 0; height: 2px; background: var(--hazard);
+  transition: width 0.3s var(--ease);
 }
+.hero-nav-link:hover::after { width: 100%; }
 
-.hero-nav-link:hover::after {
-  width: 100%;
-}
-
-/* Responsive grid utilities — override inline styles */
+/* Responsive utilities */
 @media (max-width: 900px) {
-  .grid-responsive {
-    grid-template-columns: 1fr !important;
-  }
-  .grid-responsive-2 {
-    grid-template-columns: repeat(2, 1fr) !important;
-  }
-  .hide-mobile {
-    display: none !important;
-  }
+  .grid-responsive { grid-template-columns: 1fr !important; }
+  .grid-responsive-2 { grid-template-columns: repeat(2, 1fr) !important; }
+  .hide-mobile { display: none !important; }
 }
-
 @media (max-width: 600px) {
-  .grid-responsive-2 {
-    grid-template-columns: 1fr !important;
-  }
+  .grid-responsive-2 { grid-template-columns: 1fr !important; }
+}
+@media (max-width: 768px) {
+  .nav-text-links { display: none !important; }
 }
 
-/* Nav: collapse the section links on small screens — keep logo + Waitlist CTA,
-   so the bar never overflows. Sections stay reachable by scrolling. */
 @media (max-width: 768px) {
-  .nav-text-links {
-    display: none !important;
-  }
+  body, button { cursor: auto !important; }
 }

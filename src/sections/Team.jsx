@@ -1,8 +1,5 @@
-import { useRef, useEffect } from 'react'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-
-gsap.registerPlugin(ScrollTrigger)
+import Reveal from '../components/Reveal'
+import Placeholder from '../components/Placeholder'
 
 const milestones = [
   'Replicated Saez et al. ELENA methodology on real accelerometer data',
@@ -13,247 +10,47 @@ const milestones = [
 ]
 
 export default function Team() {
-  const sectionRef = useRef()
-  const leftRef = useRef()
-  const rightRef = useRef()
-  const milestonesRef = useRef()
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.from(leftRef.current, {
-        x: -60,
-        opacity: 0,
-        duration: 1,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top 75%',
-          toggleActions: 'play none none none',
-        },
-      })
-
-      gsap.from(rightRef.current, {
-        x: 60,
-        opacity: 0,
-        duration: 1,
-        ease: 'power3.out',
-        delay: 0.2,
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top 75%',
-          toggleActions: 'play none none none',
-        },
-      })
-
-      const items = milestonesRef.current.children
-      gsap.from(items, {
-        x: -30,
-        opacity: 0,
-        duration: 0.5,
-        stagger: 0.08,
-        ease: 'power2.out',
-        scrollTrigger: {
-          trigger: milestonesRef.current,
-          start: 'top 80%',
-          toggleActions: 'play none none none',
-        },
-      })
-
-      gsap.to(leftRef.current, {
-        y: -25,
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top center',
-          end: 'bottom top',
-          scrub: 2,
-        },
-      })
-
-      gsap.to(rightRef.current, {
-        y: -15,
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top center',
-          end: 'bottom top',
-          scrub: 2,
-        },
-      })
-    }, sectionRef)
-
-    return () => ctx.revert()
-  }, [])
-
   return (
-    <section
-      id="team"
-      ref={sectionRef}
-      style={{
-        padding: 'var(--section-pad) 0',
-        background: 'var(--dark)',
-      }}
-    >
+    <section id="team" style={{ background: 'var(--paper)', padding: 'var(--section-pad) 0' }}>
       <div className="container">
-        <div className="grid-responsive" style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: '80px',
-          alignItems: 'center',
-        }}>
-          <div ref={leftRef}>
-            <span style={{
-              fontSize: '0.75rem',
-              textTransform: 'uppercase',
-              letterSpacing: '0.2em',
-              color: 'rgba(255,234,204,0.4)',
-              fontWeight: 500,
-              marginBottom: '20px',
-              display: 'block',
-            }}>
-              Our Story
-            </span>
-            <h2 style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(2.5rem, 5vw, 4rem)',
-              color: 'var(--cream)',
-              marginBottom: '28px',
-              letterSpacing: '-0.02em',
-              textTransform: 'uppercase',
-              lineHeight: 1,
-            }}>
-              <span style={{ color: 'var(--cream)' }}>Student builders.</span><br />
-              <span style={{ color: 'rgba(255,234,204,0.4)' }}>Real medical impact.</span>
-            </h2>
-            <p style={{
-              color: 'rgba(255,234,204,0.6)',
-              fontSize: '1rem',
-              lineHeight: 1.8,
-              marginBottom: '20px',
-            }}>
-              Tremora was founded by high school engineers who saw a gap between what neurologists need and what technology offers. We are building Tremora not as a school project, but as a platform that can change how Parkinson's disease is monitored at home.
-            </p>
-            <p style={{
-              color: 'rgba(255,234,204,0.6)',
-              fontSize: '1rem',
-              lineHeight: 1.8,
-              marginBottom: '36px',
-            }}>
-              Every firmware line, every signal processing decision, every hardware choice is driven by one question: does this give neurologists better data for their patients?
-            </p>
+        <div className="mono-label" style={{ color: 'var(--hazard)', marginBottom: 18 }}>[ 05 / TEAM ]</div>
+        <Reveal as="h2" variant="lines" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.6rem, 7vw, 6.5rem)', color: 'var(--ink)', lineHeight: 0.88, letterSpacing: '-0.03em', marginBottom: 36 }}>
+          Student builders. Real medical impact.
+        </Reveal>
+        <div style={{ height: 2, background: 'var(--ink)', marginBottom: 48 }} />
 
-            <div style={{
-              background: 'var(--dark-surface)',
-              borderRadius: 'var(--radius-lg)',
-              padding: '28px',
-              border: '1px solid rgba(255,234,204,0.06)',
-            }}>
-              <div style={{
-                fontSize: '0.7rem',
-                textTransform: 'uppercase',
-                letterSpacing: '0.15em',
-                color: 'rgba(255,234,204,0.4)',
-                marginBottom: '18px',
-                fontWeight: 500,
-              }}>
-                Proof Points
-              </div>
-              <div ref={milestonesRef}>
-                {milestones.map((m, i) => (
-                  <div
-                    key={i}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '12px',
-                      padding: '10px 0',
-                      borderBottom: i < milestones.length - 1 ? '1px solid rgba(255,234,204,0.06)' : 'none',
-                    }}
-                  >
-                    <div style={{
-                      width: '6px',
-                      height: '6px',
-                      borderRadius: '50%',
-                      background: 'var(--coral)',
-                      flexShrink: 0,
-                    }} />
-                    <span style={{ fontSize: '0.85rem', color: 'rgba(255,234,204,0.8)' }}>{m}</span>
-                  </div>
-                ))}
-              </div>
+        <div className="grid-responsive" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 56, alignItems: 'start' }}>
+          {/* left: narrative + proof list */}
+          <div>
+            <Reveal style={{ fontFamily: 'var(--font-sans)', fontSize: '1rem', lineHeight: 1.75, color: 'var(--text-secondary)', textTransform: 'none', marginBottom: 20 }}>
+              Tremora was founded by high school engineers who saw a gap between what neurologists need and what technology offers. We are building Tremora not as a school project, but as a platform that can change how Parkinson's is monitored at home.
+            </Reveal>
+            <Reveal style={{ fontFamily: 'var(--font-sans)', fontSize: '1rem', lineHeight: 1.75, color: 'var(--text-secondary)', textTransform: 'none', marginBottom: 36 }}>
+              Every firmware line, every signal-processing decision, every hardware choice answers one question: does this give neurologists better data for their patients?
+            </Reveal>
+
+            <div className="mono-label" style={{ marginBottom: 16 }}>// PROOF POINTS</div>
+            <div style={{ borderTop: '1px solid var(--line-strong)' }}>
+              {milestones.map((m, i) => (
+                <Reveal key={i} delay={i * 0.05} style={{ display: 'flex', gap: 16, padding: '16px 0', borderBottom: '1px solid var(--line)' }}>
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.66rem', color: 'var(--hazard)', flexShrink: 0, paddingTop: 2 }}>{String(i + 1).padStart(2, '0')}</span>
+                  <span style={{ fontFamily: 'var(--font-sans)', fontSize: '0.92rem', lineHeight: 1.5, color: 'var(--ink)', textTransform: 'none' }}>{m}</span>
+                </Reveal>
+              ))}
             </div>
           </div>
 
-          <div ref={rightRef} style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '20px',
-          }}>
-            <div style={{
-              width: '100%',
-              aspectRatio: '4/5',
-              background: 'linear-gradient(145deg, var(--dark-surface), var(--dark-elevated))',
-              borderRadius: 'var(--radius-xl)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              position: 'relative',
-              overflow: 'hidden',
-            }}>
-              <div style={{ textAlign: 'center', zIndex: 1 }}>
-                <div style={{
-                  fontFamily: 'var(--font-display)',
-                  fontSize: 'clamp(3rem, 6vw, 5rem)',
-                  textTransform: 'uppercase',
-                  fontWeight: 900,
-                  color: 'var(--cream)',
-                  lineHeight: 0.9,
-                  letterSpacing: '-0.03em',
-                  opacity: 0.08,
-                }}>
-                  Tremora
-                </div>
-                <p style={{
-                  fontSize: '0.85rem',
-                  color: 'rgba(255,234,204,0.5)',
-                  marginTop: '12px',
-                  fontWeight: 500,
-                }}>
-                  Making tremor data visible.
-                </p>
+          {/* right: photo placeholder + stat cells */}
+          <div>
+            <Reveal><Placeholder label="TEAM PHOTO" sub="FOUNDERS / SOON" ratio="4/5" theme="paper" /></Reveal>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', border: '1px solid var(--line-strong)', borderTop: 'none' }}>
+              <div style={{ padding: '24px 20px', borderRight: '1px solid var(--line-strong)' }}>
+                <div style={{ fontFamily: 'var(--font-display)', fontSize: '2.4rem', color: 'var(--hazard)', lineHeight: 1 }}>86.4%</div>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.58rem', letterSpacing: '0.1em', color: 'var(--text-muted)', marginTop: 8 }}>CLASSIFIER ACCURACY</div>
               </div>
-            </div>
-
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr',
-              gap: '16px',
-            }}>
-              <div style={{
-                background: 'var(--dark-surface)',
-                borderRadius: 'var(--radius-lg)',
-                padding: '24px',
-                textAlign: 'center',
-                border: '1px solid rgba(255,234,204,0.06)',
-              }}>
-                <div style={{ fontFamily: 'var(--font-display)', fontSize: '2.5rem', letterSpacing: '-0.02em', fontWeight: 800, color: 'var(--coral)', lineHeight: 1 }}>
-                  86.4%
-                </div>
-                <div style={{ fontSize: '0.7rem', color: 'rgba(255,234,204,0.5)', marginTop: '6px' }}>
-                  Classifier accuracy
-                </div>
-              </div>
-              <div style={{
-                background: 'var(--dark-surface)',
-                borderRadius: 'var(--radius-lg)',
-                padding: '24px',
-                textAlign: 'center',
-                border: '1px solid rgba(255,234,204,0.06)',
-              }}>
-                <div style={{ fontFamily: 'var(--font-display)', fontSize: '2.5rem', letterSpacing: '-0.02em', fontWeight: 800, color: 'var(--coral)', lineHeight: 1 }}>
-                  200Hz
-                </div>
-                <div style={{ fontSize: '0.7rem', color: 'rgba(255,234,204,0.5)', marginTop: '6px' }}>
-                  Sampling rate
-                </div>
+              <div style={{ padding: '24px 20px' }}>
+                <div style={{ fontFamily: 'var(--font-display)', fontSize: '2.4rem', color: 'var(--ink)', lineHeight: 1 }}>200Hz</div>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.58rem', letterSpacing: '0.1em', color: 'var(--text-muted)', marginTop: 8 }}>SAMPLING RATE</div>
               </div>
             </div>
           </div>

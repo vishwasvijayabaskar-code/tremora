@@ -12,11 +12,12 @@ if (typeof document !== 'undefined' && !document.getElementById('tm-btn-css')) {
   s.textContent = `
   .tm-btn{
     --dup: 1.4em;
-    position:relative; display:inline-flex; align-items:center; gap:10px;
-    padding:15px 30px; border-radius:var(--radius-pill);
-    font-size:0.8rem; font-weight:500; letter-spacing:0.08em; text-transform:uppercase;
+    position:relative; display:inline-flex; align-items:center; gap:12px;
+    padding:18px 28px; border-radius:0;
+    font-family:var(--font-mono); font-size:0.72rem; font-weight:500;
+    letter-spacing:0.14em; text-transform:uppercase;
     cursor:pointer; overflow:hidden; border:none; line-height:1;
-    transition: background .5s ${EASE}, color .5s ${EASE}, border-color .5s ${EASE};
+    transition: background .35s ${EASE}, color .35s ${EASE}, border-color .35s ${EASE};
   }
   .tm-btn__label{ position:relative; display:inline-block; overflow:hidden; }
   .tm-btn__label > span{
@@ -35,9 +36,9 @@ if (typeof document !== 'undefined' && !document.getElementById('tm-btn-css')) {
     .tm-btn:hover .tm-btn__label > span{ transform: translateY(calc(-1 * var(--dup))); }
     .tm-btn:hover .tm-btn__arrow svg:first-child{ transform: translateX(140%); }
     .tm-btn:hover .tm-btn__arrow svg + svg{ transform: translateX(0); }
-    .tm-btn.is-primary:hover{ background: var(--coral); color:#fff; }
-    .tm-btn.is-secondary:hover{ background: var(--text-primary); color:#fff; border-color: var(--text-primary); }
-    .tm-btn.is-dark:hover{ background: var(--coral); color:#fff; }
+    .tm-btn.is-primary:hover{ background: var(--ink); color: var(--paper); }
+    .tm-btn.is-secondary:hover{ background: var(--ink); color: var(--paper); border-color: var(--ink); }
+    .tm-btn.is-dark:hover{ background: var(--hazard); color: var(--paper); }
   }`
   document.head.appendChild(s)
 }
@@ -58,9 +59,9 @@ export default function Button({
   ...props
 }) {
   const palette = {
-    primary: { background: 'var(--text-primary)', color: '#fff' },
-    secondary: { background: 'transparent', color: 'var(--text-primary)', border: '1px solid rgba(26,26,26,0.18)' },
-    dark: { background: 'var(--dark)', color: 'var(--cream)' },
+    primary: { background: 'var(--hazard)', color: 'var(--paper)' },
+    secondary: { background: 'transparent', color: 'var(--ink)', border: '1px solid var(--line-strong)' },
+    dark: { background: 'var(--ink)', color: 'var(--paper)' },
   }
   const Comp = href ? 'a' : 'button'
 

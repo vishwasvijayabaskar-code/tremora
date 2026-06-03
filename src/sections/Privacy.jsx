@@ -1,176 +1,38 @@
-import { useRef, useEffect } from 'react'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import Reveal from '../components/Reveal'
 
-gsap.registerPlugin(ScrollTrigger)
-
-const privacyItems = [
-  {
-    icon: '◯',
-    title: 'Data We Collect',
-    text: 'Accelerometer data from the wrist sensor to compute tremor severity scores. Waitlist signups collect email only. No names, locations, or PII beyond motion readings.',
-  },
-  {
-    icon: '◈',
-    title: 'How We Use It',
-    text: 'Sensor data processed on-device. Aggregated severity scores transmitted to neurologist dashboard only if patient opts in. We never sell or monetize patient data.',
-  },
-  {
-    icon: '◇',
-    title: 'Storage & Security',
-    text: 'Raw data stored locally via SPIFFS, exportable as CSV. Cloud transmission uses TLS 1.3. We follow HIPAA-aligned security practices for all data handling.',
-  },
-  {
-    icon: '△',
-    title: 'Your Rights',
-    text: 'Request deletion anytime at privacy@tremora.com. Unsubscribe instantly via email link. Device data wipeable locally via reset function.',
-  },
+const items = [
+  { k: 'A', title: 'Data We Collect', text: 'Accelerometer data from the wrist sensor to compute tremor severity. Waitlist collects email only — no names, locations, or PII beyond motion readings.' },
+  { k: 'B', title: 'How We Use It', text: 'Sensor data processed on-device. Aggregated severity scores reach a neurologist dashboard only if the patient opts in. We never sell or monetize patient data.' },
+  { k: 'C', title: 'Storage & Security', text: 'Raw data stored locally via SPIFFS, exportable as CSV. Cloud transmission uses TLS 1.3. HIPAA-aligned security practices across all handling.' },
+  { k: 'D', title: 'Your Rights', text: 'Request deletion anytime at privacy@tremora.com. Unsubscribe instantly via email link. Device data wipeable locally via reset.' },
 ]
 
 export default function Privacy() {
-  const sectionRef = useRef()
-  const headerRef = useRef()
-  const gridRef = useRef()
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.from(headerRef.current, {
-        y: 50,
-        opacity: 0,
-        duration: 0.8,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: headerRef.current,
-          start: 'top 85%',
-          toggleActions: 'play none none none',
-        },
-      })
-
-      const cards = gridRef.current.children
-      gsap.from(cards, {
-        y: 40,
-        opacity: 0,
-        duration: 0.6,
-        stagger: 0.1,
-        ease: 'power2.out',
-        scrollTrigger: {
-          trigger: gridRef.current,
-          start: 'top 80%',
-          toggleActions: 'play none none none',
-        },
-      })
-    }, sectionRef)
-
-    return () => ctx.revert()
-  }, [])
-
   return (
-    <section
-      id="privacy"
-      ref={sectionRef}
-      style={{
-        padding: 'var(--section-pad) 0',
-        background: 'var(--cream-light)',
-      }}
-    >
+    <section id="privacy" style={{ background: 'var(--paper-2)', padding: 'var(--section-pad) 0' }}>
       <div className="container">
-        <div ref={headerRef} style={{ textAlign: 'center', marginBottom: '48px' }}>
-          <span style={{
-            fontSize: '0.7rem',
-            textTransform: 'uppercase',
-            letterSpacing: '0.2em',
-            color: 'var(--text-muted)',
-            fontWeight: 500,
-            marginBottom: '20px',
-            display: 'block',
-          }}>
-            Privacy & Security
-          </span>
-          <h2 style={{
-            fontFamily: 'var(--font-display)',
-            fontSize: 'clamp(2.5rem, 6vw, 4.5rem)',
-            color: 'var(--text-primary)',
-            letterSpacing: '-0.02em',
-            textTransform: 'uppercase',
-            lineHeight: 1,
-            marginBottom: '20px',
-          }}>
-            Your data, your control.
-          </h2>
-          <p style={{
-            color: 'var(--text-secondary)',
-            maxWidth: '480px',
-            margin: '0 auto',
-            lineHeight: 1.7,
-            fontSize: '0.95rem',
-          }}>
-            Privacy isn't a feature — it's the architecture. On-device processing means your tremor data never leaves your wrist unless you say so.
-          </p>
-        </div>
+        <div className="mono-label" style={{ color: 'var(--hazard)', marginBottom: 18 }}>[ 07 / PRIVACY & SECURITY ]</div>
+        <Reveal as="h2" variant="lines" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.4rem, 6.5vw, 6rem)', color: 'var(--ink)', lineHeight: 0.9, letterSpacing: '-0.03em', marginBottom: 20 }}>
+          Your data. Your control.
+        </Reveal>
+        <Reveal style={{ fontFamily: 'var(--font-sans)', fontSize: '1rem', lineHeight: 1.65, color: 'var(--text-secondary)', maxWidth: 540, textTransform: 'none', marginBottom: 48 }}>
+          Privacy isn't a feature, it's the architecture. On-device processing means tremor data never leaves the wrist unless you say so.
+        </Reveal>
 
-        <div ref={gridRef} style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(2, 1fr)',
-          gap: '16px',
-          maxWidth: '900px',
-          margin: '0 auto',
-        }}>
-          {privacyItems.map((item, i) => (
-            <div
-              key={i}
-              style={{
-                background: 'white',
-                borderRadius: 'var(--radius-xl)',
-                padding: '40px',
-                border: '1px solid rgba(0,0,0,0.04)',
-                transition: 'transform 0.3s cubic-bezier(0.22,1,0.36,1), box-shadow 0.3s ease',
-              }}
-              onMouseEnter={e => {
-                e.currentTarget.style.transform = 'translateY(-4px)'
-                e.currentTarget.style.boxShadow = '0 16px 48px rgba(0,0,0,0.06)'
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.transform = 'translateY(0)'
-                e.currentTarget.style.boxShadow = 'none'
-              }}
-            >
-              <div style={{
-                fontSize: '1.4rem',
-                marginBottom: '16px',
-                color: 'var(--coral)',
-                opacity: 0.7,
-              }}>
-                {item.icon}
+        <div className="grid-responsive-2" style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 1, background: 'var(--ink)', border: '1px solid var(--ink)' }}>
+          {items.map((it, i) => (
+            <Reveal key={i} delay={i * 0.06} style={{ background: 'var(--paper)', padding: 36 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 16 }}>
+                <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.4rem', color: 'var(--ink)', lineHeight: 1 }}>{it.title}</h3>
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: 'var(--hazard)' }}>/{it.k}</span>
               </div>
-              <h3 style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: '1.3rem',
-                color: 'var(--text-primary)',
-                textTransform: 'uppercase',
-                letterSpacing: '0.02em',
-                marginBottom: '12px',
-              }}>
-                {item.title}
-              </h3>
-              <p style={{
-                fontSize: '0.85rem',
-                color: 'var(--text-secondary)',
-                lineHeight: 1.7,
-              }}>
-                {item.text}
-              </p>
-            </div>
+              <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.86rem', lineHeight: 1.65, color: 'var(--text-secondary)', textTransform: 'none' }}>{it.text}</p>
+            </Reveal>
           ))}
         </div>
 
-        <p style={{
-          textAlign: 'center',
-          fontSize: '0.7rem',
-          color: 'var(--text-muted)',
-          marginTop: '48px',
-          fontStyle: 'italic',
-        }}>
-          Last updated May 2026. TremoTrack is pre-clinical technology, not subject to FDA regulation at this stage.
+        <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.62rem', color: 'var(--text-muted)', marginTop: 32, letterSpacing: '0.04em' }}>
+          LAST UPDATED MAY 2026 / PRE-CLINICAL TECHNOLOGY, NOT SUBJECT TO FDA REGULATION AT THIS STAGE.
         </p>
       </div>
     </section>
