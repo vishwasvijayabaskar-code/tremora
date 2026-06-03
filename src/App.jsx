@@ -1,5 +1,6 @@
 import { useLenis } from './hooks/useLenis'
 import CustomCursor from './components/CustomCursor'
+import LedGrid from './components/LedGrid'
 import BendScroll from './components/BendScroll'
 import Navbar from './components/Navbar'
 import Marquee from './components/Marquee'
@@ -17,18 +18,21 @@ function App() {
   useLenis()
   return (
     <>
+      <LedGrid />
       <CustomCursor />
       <Navbar />
-      <Hero />
-      <Marquee />
-      <Problem />
-      <HowItWorks />
-      <Features />
-      <Device />
-      <Team />
-      <Roadmap />
-      <Privacy />
-      <CTA />
+      <div style={{ position: 'relative', zIndex: 1 }}>
+        <Hero />
+        <Marquee />
+        <Problem />
+        <HowItWorks />
+        <Features />
+        <Device />
+        <Team />
+        <Roadmap />
+        <Privacy />
+        <CTA />
+      </div>
       <BendScroll />
     </>
   )

@@ -2,7 +2,6 @@ import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Button from '../components/Button'
-import LedGrid from '../components/LedGrid'
 import ChromeObjects from '../components/ChromeObjects'
 import { Perspective, Highlight } from '../components/PerspectiveHighlight'
 import { useCountUp } from '../hooks/useCountUp'
@@ -65,11 +64,10 @@ export default function Hero() {
 
   return (
     <section ref={sectionRef} id="top" style={{
-      position: 'relative', minHeight: '100dvh', background: 'var(--paper)',
+      position: 'relative', minHeight: '100dvh', background: 'transparent',
       display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
       overflow: 'hidden', padding: '0 24px',
     }}>
-      <LedGrid />
       <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 80% 60% at 50% 120%, rgba(230,25,25,0.05) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 1 }} />
       <ChromeObjects objects={heroObjects} />
 
