@@ -69,10 +69,11 @@ export default function Hero() {
       overflow: 'hidden', padding: '0 24px',
     }}>
       <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 80% 60% at 50% 120%, rgba(230,25,25,0.05) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 1 }} />
+
       <ChromeObjects objects={heroObjects} />
 
       {/* Chrome Title */}
-      <div ref={titleRef} style={{ position: 'relative', zIndex: 3, textAlign: 'center', willChange: 'transform', marginBottom: '40px' }}>
+      <div ref={titleRef} style={{ position: 'relative', zIndex: 3, textAlign: 'center', willChange: 'transform', marginTop: 'clamp(36px, 8vh, 110px)', marginBottom: '40px' }}>
         <div style={{ perspective: '1200px', transformStyle: 'preserve-3d' }}>
           <div style={{ overflow: 'hidden', paddingBottom: '16px' }}>
             <div aria-label="Tremora" style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-end', gap: 0, height: 'clamp(150px, 32vw, 380px)' }}>
