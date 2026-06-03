@@ -1,8 +1,14 @@
 import { useRef, useEffect, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useCountUp } from '../hooks/useCountUp'
 
 gsap.registerPlugin(ScrollTrigger)
+
+function CountMetric({ display, style }) {
+  const { ref, value } = useCountUp(display)
+  return <span ref={ref} style={style}>{value}</span>
+}
 
 const steps = [
   {
@@ -209,15 +215,13 @@ function StepCard({ step, index }) {
           paddingTop: '16px',
           borderTop: '1px solid rgba(255,234,204,0.08)',
         }}>
-          <span style={{
+          <CountMetric display={step.metric} style={{
             fontFamily: 'var(--font-display)',
             fontSize: '1.6rem',
             color: 'var(--coral)',
             lineHeight: 1,
             letterSpacing: '-0.01em',
-          }}>
-            {step.metric}
-          </span>
+          }} />
           <span style={{
             fontSize: '0.72rem',
             color: 'rgba(255,234,204,0.45)',

@@ -1,84 +1,82 @@
-import { useRef } from 'react'
+/**
+ * Button — Hildén & Kaira-style hover: the label flips up to a duplicate of
+ * itself (text-shadow trick), an optional arrow slides out and back, and the
+ * fill animates. Pure CSS hover via a one-time injected stylesheet, so it works
+ * with inline-style components. House ease: cubic-bezier(0.625,0.05,0,1).
+ */
+const EASE = 'cubic-bezier(0.625, 0.05, 0, 1)'
 
-export default function Button({ children, variant = 'primary', href, onClick, style: extraStyle }) {
-  const btnRef = useRef()
-
-  const base = {
-    position: 'relative',
-    padding: '14px 32px',
-    borderRadius: 'var(--radius-pill)',
-    fontSize: '0.85rem',
-    fontWeight: 500,
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '8px',
-    border: 'none',
-    letterSpacing: '0.04em',
-    textTransform: 'uppercase',
-    cursor: 'pointer',
-    overflow: 'hidden',
-    transition: 'all 0.4s cubic-bezier(0.22,1,0.36,1)',
+if (typeof document !== 'undefined' && !document.getElementById('tm-btn-css')) {
+  const s = document.createElement('style')
+  s.id = 'tm-btn-css'
+  s.textContent = `
+  .tm-btn{
+    --dup: 1.4em;
+    position:relative; display:inline-flex; align-items:center; gap:10px;
+    padding:15px 30px; border-radius:var(--radius-pill);
+    font-size:0.8rem; font-weight:500; letter-spacing:0.08em; text-transform:uppercase;
+    cursor:pointer; overflow:hidden; border:none; line-height:1;
+    transition: background .5s ${EASE}, color .5s ${EASE}, border-color .5s ${EASE};
   }
-
-  const styles = {
-    primary: {
-      ...base,
-      background: 'var(--text-primary)',
-      color: 'white',
-    },
-    secondary: {
-      ...base,
-      background: 'transparent',
-      color: 'var(--text-primary)',
-      border: '1px solid rgba(26,26,26,0.15)',
-    },
-    dark: {
-      ...base,
-      background: 'var(--dark)',
-      color: 'var(--cream)',
-    },
+  .tm-btn__label{ position:relative; display:inline-block; overflow:hidden; }
+  .tm-btn__label > span{
+    display:inline-block;
+    text-shadow: 0 var(--dup) currentColor;
+    transition: transform .55s ${EASE};
   }
+  .tm-btn__arrow{
+    width:11px; height:11px; flex:none; overflow:hidden; position:relative;
+  }
+  .tm-btn__arrow svg{ position:absolute; inset:0; width:100%; height:100%;
+    transition: transform .55s ${EASE}; }
+  .tm-btn__arrow svg + svg{ transform: translateX(-140%); }
 
+  @media (hover:hover) and (pointer:fine){
+    .tm-btn:hover .tm-btn__label > span{ transform: translateY(calc(-1 * var(--dup))); }
+    .tm-btn:hover .tm-btn__arrow svg:first-child{ transform: translateX(140%); }
+    .tm-btn:hover .tm-btn__arrow svg + svg{ transform: translateX(0); }
+    .tm-btn.is-primary:hover{ background: var(--coral); color:#fff; }
+    .tm-btn.is-secondary:hover{ background: var(--text-primary); color:#fff; border-color: var(--text-primary); }
+    .tm-btn.is-dark:hover{ background: var(--coral); color:#fff; }
+  }`
+  document.head.appendChild(s)
+}
+
+const Arrow = () => (
+  <svg viewBox="0 0 12 12" fill="none" aria-hidden="true">
+    <path d="M0 6.76V5.24H9.09L4.92 1.08L6 0L12 6L6 12L4.92 10.92L9.09 6.76H0Z" fill="currentColor" />
+  </svg>
+)
+
+export default function Button({
+  children,
+  variant = 'primary',
+  href,
+  onClick,
+  arrow = true,
+  style: extraStyle,
+  ...props
+}) {
+  const palette = {
+    primary: { background: 'var(--text-primary)', color: '#fff' },
+    secondary: { background: 'transparent', color: 'var(--text-primary)', border: '1px solid rgba(26,26,26,0.18)' },
+    dark: { background: 'var(--dark)', color: 'var(--cream)' },
+  }
   const Comp = href ? 'a' : 'button'
-
-  const handleEnter = () => {
-    if (!btnRef.current) return
-    btnRef.current.style.transform = 'scale(1.04)'
-    if (variant === 'primary') {
-      btnRef.current.style.background = 'var(--coral)'
-      btnRef.current.style.boxShadow = '0 8px 32px rgba(251,79,98,0.25)'
-    } else if (variant === 'secondary') {
-      btnRef.current.style.borderColor = 'var(--text-primary)'
-      btnRef.current.style.background = 'var(--text-primary)'
-      btnRef.current.style.color = 'white'
-      btnRef.current.style.boxShadow = '0 8px 24px rgba(26,26,26,0.15)'
-    }
-  }
-
-  const handleLeave = () => {
-    if (!btnRef.current) return
-    btnRef.current.style.transform = 'scale(1)'
-    btnRef.current.style.boxShadow = 'none'
-    if (variant === 'primary') {
-      btnRef.current.style.background = 'var(--text-primary)'
-    } else if (variant === 'secondary') {
-      btnRef.current.style.borderColor = 'rgba(26,26,26,0.15)'
-      btnRef.current.style.background = 'transparent'
-      btnRef.current.style.color = 'var(--text-primary)'
-    }
-  }
 
   return (
     <Comp
-      ref={btnRef}
       href={href}
       onClick={onClick}
-      onMouseEnter={handleEnter}
-      onMouseLeave={handleLeave}
-      data-cursor-magnetic
-      style={{ ...styles[variant], ...extraStyle }}
+      data-cursor-hover
+      className={`tm-btn is-${variant}`}
+      style={{ ...palette[variant], ...extraStyle }}
+      {...props}
     >
-      {children}
+      <span className="tm-btn__label"><span>{children}</span></span>
+      {arrow && (
+        <span className="tm-btn__arrow"><Arrow /><Arrow /></span>
+      )}
     </Comp>
   )
 }

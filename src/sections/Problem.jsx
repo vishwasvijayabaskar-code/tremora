@@ -1,8 +1,14 @@
 import { useRef, useEffect } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useCountUp } from '../hooks/useCountUp'
 
 gsap.registerPlugin(ScrollTrigger)
+
+function CountStat({ display, style }) {
+  const { ref, value } = useCountUp(display)
+  return <span ref={ref} style={style}>{value}</span>
+}
 
 const stats = [
   { number: '4×', label: 'yearly visits', sub: 'Average neurologist appointments per year' },
@@ -200,16 +206,15 @@ export default function Problem() {
             textAlign: 'center',
             padding: '40px',
           }}>
-            <div style={{
+            <CountStat display="1hr" style={{
               fontFamily: 'var(--font-display)',
               fontSize: 'clamp(6rem, 12vw, 10rem)',
               fontWeight: 800,
               color: 'var(--coral)',
               lineHeight: 0.85,
               opacity: 0.15,
-            }}>
-              1hr
-            </div>
+              display: 'block',
+            }} />
             <div style={{
               fontSize: '0.8rem',
               color: 'var(--text-muted)',
@@ -238,16 +243,15 @@ export default function Problem() {
                 textAlign: 'center',
               }}
             >
-              <div style={{
+              <CountStat display={stat.number} style={{
                 fontFamily: 'var(--font-display)',
                 fontSize: '3rem',
                 fontWeight: 800,
                 color: 'var(--text-primary)',
                 marginBottom: '4px',
                 lineHeight: 1,
-              }}>
-                {stat.number}
-              </div>
+                display: 'block',
+              }} />
               <div style={{
                 fontSize: '0.85rem',
                 fontWeight: 600,

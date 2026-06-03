@@ -4,6 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Button from '../components/Button'
 import ChromeObjects from '../components/ChromeObjects'
 import { Perspective, Highlight } from '../components/PerspectiveHighlight'
+import { useCountUp } from '../hooks/useCountUp'
 import l0 from '../assets/title/l0.webp'
 import l1 from '../assets/title/l1.webp'
 import l2 from '../assets/title/l2.webp'
@@ -13,6 +14,11 @@ import l5 from '../assets/title/l5.webp'
 import l6 from '../assets/title/l6.webp'
 
 gsap.registerPlugin(ScrollTrigger)
+
+function CountStat({ display }) {
+  const { ref, value } = useCountUp(display)
+  return <span ref={ref}>{value}</span>
+}
 
 // chrome "Tremora" sliced into 7 letters — contiguous, so a no-gap flex row
 // reconstructs the word exactly while each letter animates on its own
@@ -323,7 +329,7 @@ export default function Hero() {
                   letterSpacing: '0.02em',
                   padding: '2px 9px',
                 }}>
-                  {s.v}
+                  <CountStat display={s.v} />
                 </Highlight>
                 {s.l}
               </span>

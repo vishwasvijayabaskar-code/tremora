@@ -20,6 +20,9 @@
   --font-serif: 'Playfair Display', Georgia, serif;
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 
+  /* House ease — the single curve used for every premium transition */
+  --ease: cubic-bezier(0.625, 0.05, 0, 1);
+
   --section-pad: clamp(56px, 7vw, 104px);
   --container: 1200px;
   --gap-xl: 80px;
