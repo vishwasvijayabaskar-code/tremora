@@ -1,5 +1,6 @@
 import { useLenis } from './hooks/useLenis'
 import CustomCursor from './components/CustomCursor'
+import BendScroll from './components/BendScroll'
 import Navbar from './components/Navbar'
 import Marquee from './components/Marquee'
 import Hero from './sections/Hero'
@@ -28,6 +29,7 @@ function App() {
       <Roadmap />
       <Privacy />
       <CTA />
+      <BendScroll />
     </>
   )
 }
