@@ -85,7 +85,7 @@ export default function Hero() {
       (and import { SplineScene } from '../components/SplineScene') */}
 
       {/* Chrome Title */}
-      <div ref={titleRef} style={{ position: 'relative', zIndex: 3, textAlign: 'center', willChange: 'transform', marginTop: 'clamp(36px, 8vh, 110px)', marginBottom: '40px' }}>
+      <div ref={titleRef} style={{ position: 'relative', zIndex: 3, textAlign: 'center', willChange: 'transform', marginTop: 'clamp(46px, calc(8vh + 10px), 120px)', marginBottom: '40px' }}>
         <div style={{ perspective: '1200px', transformStyle: 'preserve-3d' }}>
           <div style={{ overflow: 'hidden', paddingBottom: '16px' }}>
             <div aria-label="Tremora" style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-end', gap: 0, height: 'clamp(150px, 32vw, 380px)' }}>
