@@ -11,7 +11,7 @@ const milestones = [
 
 export default function Team() {
   return (
-    <section id="team" style={{ background: 'transparent', padding: 'var(--section-pad) 0' }}>
+    <section id="team" style={{ background: 'var(--paper)', padding: 'var(--section-pad) 0' }}>
       <div className="container">
         <div className="mono-label" style={{ color: 'var(--hazard)', marginBottom: 18 }}>[ 05 / TEAM ]</div>
         <Reveal as="h2" variant="lines" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.6rem, 7vw, 6.5rem)', color: 'var(--ink)', lineHeight: 0.88, letterSpacing: '-0.03em', marginBottom: 36 }}>

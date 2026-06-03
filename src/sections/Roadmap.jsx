@@ -18,7 +18,7 @@ const cards = [
 export default function Roadmap() {
   const sw = useRef(null)
   return (
-    <section id="roadmap" style={{ background: 'transparent', padding: 'var(--section-pad) 0', overflow: 'hidden' }}>
+    <section id="roadmap" style={{ background: 'var(--paper-2)', padding: 'var(--section-pad) 0', overflow: 'hidden' }}>
       <div className="container" style={{ marginBottom: 28 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 24, flexWrap: 'wrap' }}>
           <div>

@@ -24,7 +24,7 @@ function Price({ v }) { const { ref, value } = useCountUp(v); return <span ref={
 export default function Device() {
   const sw = useRef(null)
   return (
-    <section id="device" style={{ background: 'transparent', padding: 'var(--section-pad) 0', overflow: 'hidden' }}>
+    <section id="device" style={{ background: 'var(--paper)', padding: 'var(--section-pad) 0', overflow: 'hidden' }}>
       <div className="container">
         <div className="mono-label" style={{ color: 'var(--hazard)', marginBottom: 18 }}>[ 04 / HARDWARE ]</div>
         <Reveal as="h2" variant="lines" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.8rem, 8vw, 7rem)', color: 'var(--ink)', lineHeight: 0.88, letterSpacing: '-0.03em', marginBottom: 36 }}>

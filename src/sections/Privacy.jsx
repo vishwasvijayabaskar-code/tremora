@@ -9,7 +9,7 @@ const items = [
 
 export default function Privacy() {
   return (
-    <section id="privacy" style={{ background: 'transparent', padding: 'var(--section-pad) 0' }}>
+    <section id="privacy" style={{ background: 'var(--paper-2)', padding: 'var(--section-pad) 0' }}>
       <div className="container">
         <div className="mono-label" style={{ color: 'var(--hazard)', marginBottom: 18 }}>[ 07 / PRIVACY & SECURITY ]</div>
         <Reveal as="h2" variant="lines" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.4rem, 6.5vw, 6rem)', color: 'var(--ink)', lineHeight: 0.9, letterSpacing: '-0.03em', marginBottom: 20 }}>

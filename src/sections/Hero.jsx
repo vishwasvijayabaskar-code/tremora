@@ -64,7 +64,7 @@ export default function Hero() {
 
   return (
     <section ref={sectionRef} id="top" style={{
-      position: 'relative', minHeight: '100dvh', background: 'transparent',
+      position: 'relative', minHeight: '100dvh', background: 'var(--paper)',
       display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
       overflow: 'hidden', padding: '0 24px',
     }}>
@@ -75,7 +75,7 @@ export default function Hero() {
       <div ref={titleRef} style={{ position: 'relative', zIndex: 3, textAlign: 'center', willChange: 'transform', marginBottom: '40px' }}>
         <div style={{ perspective: '1200px', transformStyle: 'preserve-3d' }}>
           <div style={{ overflow: 'hidden', paddingBottom: '16px' }}>
-            <div aria-label="Tremora" style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-end', gap: 0, height: 'clamp(113px, 24vw, 284px)' }}>
+            <div aria-label="Tremora" style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-end', gap: 0, height: 'clamp(150px, 32vw, 380px)' }}>
               {titleLetters.map((letter, i) => (
                 <span key={i} className="hero-chrome-letter" style={{ transformOrigin: 'bottom center', display: 'block', height: '100%' }}>
                   <img src={letter.src} alt={letter.alt} draggable={false}
@@ -95,7 +95,7 @@ export default function Hero() {
             fontFamily: 'var(--font-sans)', fontSize: 'clamp(1.3rem, 3vw, 2.3rem)', color: 'var(--ink)',
             fontWeight: 600, lineHeight: 1.3, margin: 0, textTransform: 'none', letterSpacing: '-0.01em',
           }}>
-            If your neurologist can't see <Highlight color="coral">between visits</Highlight>, they're treating a <Highlight color="peach">snapshot</Highlight>, not a patient.
+            If your neurologist can't see <Highlight color="coral">between visits</Highlight>, they're treating a <Highlight color="cream">snapshot</Highlight>, not a patient.
           </p>
         </Perspective>
 

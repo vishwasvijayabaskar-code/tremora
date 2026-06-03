@@ -1,10 +1,5 @@
-import { useRef, useEffect } from 'react'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useCountUp } from '../hooks/useCountUp'
 import Reveal from '../components/Reveal'
-
-gsap.registerPlugin(ScrollTrigger)
 
 const features = [
   { id: 'SYS-01', stat: '<50ms', statLabel: 'INFERENCE TIME', title: 'On-Device ML',
@@ -30,104 +25,47 @@ const features = [
 function Stat({ display }) { const { ref, value } = useCountUp(display); return <span ref={ref}>{value}</span> }
 
 export default function Features() {
-  const sectionRef = useRef()
-  const pinHeightRef = useRef()
-  const containerRef = useRef()
-  const progressRef = useRef()
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      const cards = gsap.utils.toArray('.tm-flash')
-      const n = cards.length
-      const st = { p: 0 }
-
-      // position every card from a single progress value p (0 .. n-1)
-      const layout = () => {
-        cards.forEach((card, i) => {
-          const rel = st.p - i
-          let yPct, scale, op, rot
-          if (rel <= 0) {            // upcoming — peek behind, stacked down
-            const d = Math.min(-rel, 3)
-            yPct = d * 5
-            scale = 1 - d * 0.05
-            op = 1
-            rot = 0
-          } else if (rel < 1) {      // leaving — slide up and fade
-            yPct = -rel * 120
-            scale = 1
-            op = 1 - rel * 0.85
-            rot = rel * (i % 2 ? 5 : -5)
-          } else {                   // gone
-            yPct = -120; scale = 1; op = 0; rot = 0
-          }
-          gsap.set(card, { yPercent: yPct, scale, opacity: op, rotate: rot })
-        })
-        if (progressRef.current) progressRef.current.style.transform = `scaleX(${n > 1 ? st.p / (n - 1) : 1})`
-      }
-      layout()
-
-      ScrollTrigger.create({
-        trigger: pinHeightRef.current, start: 'top top', end: 'bottom bottom',
-        pin: containerRef.current, anticipatePin: 1, invalidateOnRefresh: true,
-      })
-      gsap.to(st, {
-        p: n - 1, ease: 'none', onUpdate: layout,
-        scrollTrigger: { trigger: pinHeightRef.current, start: 'top top', end: 'bottom bottom', scrub: 0.4, invalidateOnRefresh: true },
-      })
-    }, sectionRef)
-
-    const refresh = () => ScrollTrigger.refresh()
-    if (document.fonts?.ready) document.fonts.ready.then(refresh)
-    const t = setTimeout(refresh, 400)
-    return () => { clearTimeout(t); ctx.revert() }
-  }, [])
-
   return (
-    <section id="features" ref={sectionRef} style={{ background: 'var(--ink)', color: 'var(--text-light)' }}>
-      <div className="container" style={{ paddingTop: 'var(--section-pad)' }}>
+    <section id="features" style={{ background: 'var(--ink)', color: 'var(--text-light)' }}>
+      <div className="container" style={{ paddingTop: 'var(--section-pad)', paddingBottom: 24 }}>
         <div className="mono-label" style={{ color: 'var(--hazard)', marginBottom: 18 }}>[ 03 / TECHNOLOGY ]</div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 32, flexWrap: 'wrap' }}>
           <Reveal as="h2" variant="lines" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.6rem, 7vw, 6rem)', color: 'var(--paper)', lineHeight: 0.9, letterSpacing: '-0.03em', margin: 0 }}>
             Six systems. One wrist.
           </Reveal>
           <Reveal style={{ fontFamily: 'var(--font-mono)', fontSize: '0.72rem', lineHeight: 1.7, color: 'var(--text-light-2)', maxWidth: 280, letterSpacing: '0.03em' }}>
-            SCROLL TO ADVANCE THE STACK. SIX SUBSYSTEMS, ONE OUTCOME — TREMOR DATA A NEUROLOGIST CAN ACT ON.
+            SCROLL — EACH PANEL STACKS OVER THE LAST. SIX SUBSYSTEMS, ONE OUTCOME: TREMOR DATA A NEUROLOGIST CAN ACT ON.
           </Reveal>
         </div>
         <div style={{ height: 2, background: 'var(--hazard)', marginTop: 28 }} />
       </div>
 
-      <div ref={pinHeightRef} style={{ height: `${(features.length - 1) * 72 + 110}vh`, position: 'relative' }}>
-        <div ref={containerRef} style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
-          <div style={{ position: 'relative', width: 'min(820px, 90vw)', height: 'min(72vh, 600px)' }}>
-            {features.map((f, i) => (
-              <article key={i} className="tm-flash" style={{
-                position: 'absolute', inset: 0, zIndex: features.length - i,
-                background: 'var(--ink-2)', border: '1px solid var(--line-light)',
-                padding: 'clamp(28px, 4vw, 52px)', display: 'flex', flexDirection: 'column',
-                willChange: 'transform, opacity', boxShadow: '0 40px 80px rgba(0,0,0,0.45)',
-              }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--font-mono)', fontSize: '0.66rem', letterSpacing: '0.14em', color: 'var(--text-light-2)' }}>
-                  <span style={{ color: 'var(--hazard)' }}>{f.id}</span>
-                  <span>{f.statLabel}</span>
-                </div>
-                <div style={{ height: 1, background: 'var(--line-light)', margin: '18px 0' }} />
-                <div style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(3rem, 7vw, 5.5rem)', color: 'var(--paper)', lineHeight: 0.9 }}><Stat display={f.stat} /></div>
-                <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.5rem, 3vw, 2.2rem)', color: 'var(--paper)', lineHeight: 0.95, margin: '16px 0 14px' }}>{f.title}</h3>
-                <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.95rem', lineHeight: 1.6, color: 'var(--text-light-2)', textTransform: 'none', marginBottom: 12 }}>{f.desc}</p>
-                <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.68rem', lineHeight: 1.55, color: 'var(--text-muted)', letterSpacing: '0.02em', marginBottom: 'auto' }}>{f.detail}</p>
-                <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 22 }}>
-                  {f.tags.map((t, j) => <span key={j} style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', letterSpacing: '0.1em', color: 'var(--paper)', border: '1px solid var(--line-light)', padding: '5px 10px' }}>{t}</span>)}
-                </div>
-                <div style={{ position: 'absolute', bottom: 16, right: 20, fontFamily: 'var(--font-mono)', fontSize: '0.6rem', color: 'var(--text-muted)' }}>{String(i + 1).padStart(2, '0')} / 06</div>
-              </article>
-            ))}
-            {/* progress bar under the stack */}
-            <div style={{ position: 'absolute', left: 0, right: 0, bottom: -28, height: 2, background: 'var(--line-light)' }}>
-              <div ref={progressRef} style={{ height: '100%', background: 'var(--hazard)', transformOrigin: 'left center', transform: 'scaleX(0)' }} />
-            </div>
+      {/* sticky flashcard stack — each panel sticks at top, next scrolls up and covers it */}
+      <div style={{ position: 'relative' }}>
+        {features.map((f, i) => (
+          <div key={i} style={{ position: 'sticky', top: 0, height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: i }}>
+            <article style={{
+              position: 'relative', width: 'min(960px, 92vw)', height: 'min(80vh, 640px)',
+              background: 'var(--ink-2)', border: '1px solid var(--line-light)',
+              boxShadow: '0 -30px 80px rgba(0,0,0,0.6)',
+              padding: 'clamp(28px, 4vw, 56px)', display: 'flex', flexDirection: 'column',
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--font-mono)', fontSize: '0.7rem', letterSpacing: '0.14em', color: 'var(--text-light-2)' }}>
+                <span style={{ color: 'var(--hazard)' }}>{f.id}</span>
+                <span>{f.statLabel}</span>
+              </div>
+              <div style={{ height: 1, background: 'var(--line-light)', margin: '20px 0' }} />
+              <div style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(3.2rem, 8vw, 6rem)', color: 'var(--paper)', lineHeight: 0.9 }}><Stat display={f.stat} /></div>
+              <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.6rem, 3.2vw, 2.6rem)', color: 'var(--paper)', lineHeight: 0.95, margin: '18px 0 16px' }}>{f.title}</h3>
+              <p style={{ fontFamily: 'var(--font-sans)', fontSize: 'clamp(0.95rem,1.4vw,1.1rem)', lineHeight: 1.6, color: 'var(--text-light-2)', textTransform: 'none', marginBottom: 14, maxWidth: 620 }}>{f.desc}</p>
+              <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.72rem', lineHeight: 1.55, color: 'var(--text-muted)', letterSpacing: '0.02em', marginBottom: 'auto', maxWidth: 620 }}>{f.detail}</p>
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 24 }}>
+                {f.tags.map((t, j) => <span key={j} style={{ fontFamily: 'var(--font-mono)', fontSize: '0.62rem', letterSpacing: '0.1em', color: 'var(--paper)', border: '1px solid var(--line-light)', padding: '6px 12px' }}>{t}</span>)}
+              </div>
+              <div style={{ position: 'absolute', bottom: 'clamp(20px,3vw,40px)', right: 'clamp(28px,4vw,56px)', fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: 'var(--text-muted)' }}>{String(i + 1).padStart(2, '0')} / 06</div>
+            </article>
           </div>
-        </div>
+        ))}
       </div>
     </section>
   )
