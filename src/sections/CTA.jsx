@@ -232,9 +232,9 @@ export default function CTA() {
             margin: '0 auto 56px',
           }}>
             {[
-              { value: '200Hz', label: 'Continuous sampling' },
-              { value: '86.4%', label: 'Classifier accuracy' },
-              { value: '<50ms', label: 'On-device inference' },
+              { value: 'Jul 27', label: 'Atlanta Startup Village' },
+              { value: '$199', label: 'Target device price' },
+              { value: '50', label: 'Pilot devices, first batch' },
             ].map((item, i) => (
               <div key={i} style={{
                 background: 'var(--dark-surface)',
