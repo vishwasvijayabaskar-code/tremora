@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Button from '../components/Button'
+import LedGrid from '../components/LedGrid'
 import ChromeObjects from '../components/ChromeObjects'
 import { Perspective, Highlight } from '../components/PerspectiveHighlight'
 import { useCountUp } from '../hooks/useCountUp'
@@ -68,14 +69,15 @@ export default function Hero() {
       display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
       overflow: 'hidden', padding: '0 24px',
     }}>
-      <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 80% 60% at 50% 120%, rgba(230,25,25,0.05) 0%, transparent 70%)', pointerEvents: 'none' }} />
+      <LedGrid />
+      <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 80% 60% at 50% 120%, rgba(230,25,25,0.05) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 1 }} />
       <ChromeObjects objects={heroObjects} />
 
       {/* Chrome Title */}
       <div ref={titleRef} style={{ position: 'relative', zIndex: 3, textAlign: 'center', willChange: 'transform', marginBottom: '40px' }}>
         <div style={{ perspective: '1200px', transformStyle: 'preserve-3d' }}>
           <div style={{ overflow: 'hidden', paddingBottom: '16px' }}>
-            <div aria-label="Tremora" style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-end', gap: 0, height: 'clamp(84px, 18vw, 210px)' }}>
+            <div aria-label="Tremora" style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-end', gap: 0, height: 'clamp(113px, 24vw, 284px)' }}>
               {titleLetters.map((letter, i) => (
                 <span key={i} className="hero-chrome-letter" style={{ transformOrigin: 'bottom center', display: 'block', height: '100%' }}>
                   <img src={letter.src} alt={letter.alt} draggable={false}
