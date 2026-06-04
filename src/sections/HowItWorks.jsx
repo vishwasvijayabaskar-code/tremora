@@ -1,11 +1,22 @@
 import Reveal from '../components/Reveal'
 import Placeholder from '../components/Placeholder'
+import HScrollStrip from '../components/HScrollStrip'
 import { useCountUp } from '../hooks/useCountUp'
 
 const steps = [
   { n: '01', title: 'Capture', desc: 'A wrist-worn sensor samples tremor movement at 200Hz continuously throughout the day.', tags: ['MPU-6050', '6-AXIS', '200HZ'], metric: '~18hr', metricLabel: 'ACTIVE RECORDING / CHARGE', visual: 'wave' },
   { n: '02', title: 'Score', desc: 'On-device FFT and a trained classifier score tremor severity in real time — no cloud round-trip.', tags: ['FFT', 'RANDOM-FOREST', 'UPDRS'], metric: '<50ms', metricLabel: 'PER 256-SAMPLE WINDOW', visual: 'bars' },
   { n: '03', title: 'Reveal', desc: 'A neurologist dashboard surfaces weeks of patterns, showing how tremor responds to each dose.', tags: ['DASHBOARD', 'TIMELINE', 'REPORTS'], metric: 'WEEKS', metricLabel: 'OF DATA PER VISIT', visual: 'dash' },
+]
+
+// Deep-dive: the on-device signal pipeline, stage by stage (horizontal rail).
+const pipeline = [
+  { stage: 'P-01', io: 'SENSOR', title: 'Raw Capture', desc: 'Six-axis inertial data streamed off the wrist module, continuously, every waking hour.', specs: [['IMU', 'MPU-6050'], ['RATE', '200 Hz'], ['RANGE', '±2g / ±250°/s'], ['AXES', '3 accel + 3 gyro']] },
+  { stage: 'P-02', io: 'BUFFER', title: 'Windowing', desc: 'The stream is cut into overlapping frames so no tremor burst ever falls between two windows.', specs: [['WINDOW', '256 samples'], ['SPAN', '1.28 s'], ['OVERLAP', '50%'], ['TAPER', 'Hann']] },
+  { stage: 'P-03', io: 'TRANSFORM', title: 'FFT', desc: 'Each frame moves to the frequency domain to isolate the 4–6 Hz Parkinsonian tremor band from voluntary motion.', specs: [['METHOD', 'Radix-2 FFT'], ['BINS', '128'], ['BAND', '4–6 Hz'], ['CLEAN', 'DC + drift removed']] },
+  { stage: 'P-04', io: 'FEATURES', title: 'Feature Vector', desc: 'A compact set of discriminative features is computed per window and handed to the classifier.', specs: [['BAND PWR', 'tremor / total'], ['ENTROPY', 'spectral'], ['RMS', 'per axis'], ['PEAK', 'dominant Hz']] },
+  { stage: 'P-05', io: 'INFERENCE', title: 'Random Forest', desc: 'A trained ensemble scores severity entirely on the ESP32 — no cloud, no latency, no data leaving the wrist.', specs: [['MODEL', 'Random Forest'], ['TREES', '100'], ['LATENCY', '<50 ms'], ['ACCURACY', '86.4%*']] },
+  { stage: 'P-06', io: 'OUTPUT', title: 'UPDRS Proxy', desc: 'Window scores aggregate into a continuous severity curve, time-aligned to every logged medication dose.', specs: [['SCALE', '0–4 proxy'], ['CADENCE', 'per minute'], ['ALIGNED', 'dose events'], ['EXPORT', 'CSV / PDF']] },
 ]
 
 function Metric({ display }) { const { ref, value } = useCountUp(display); return <span ref={ref}>{value}</span> }
@@ -67,6 +78,36 @@ export default function HowItWorks() {
             </div>
           </Reveal>
         ))}
+
+        {/* Deep-dive horizontal rail — drag / arrows, jank-free native scroll-snap */}
+        <div style={{ marginTop: 72 }}>
+          <Reveal>
+            <HScrollStrip title="[ DEEP DIVE / SIGNAL PIPELINE → ]" ariaLabel="On-device signal pipeline, stage by stage">
+              {pipeline.map((p, i) => (
+                <article key={i} style={{
+                  scrollSnapAlign: 'start', flex: '0 0 auto', width: 'min(340px, 80vw)', marginRight: 16,
+                  padding: '26px 24px', border: '1px solid var(--line-light)', background: 'var(--ink-2)',
+                  display: 'flex', flexDirection: 'column', minHeight: 320,
+                }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--font-mono)', fontSize: '0.6rem', letterSpacing: '0.12em', marginBottom: 18 }}>
+                    <span style={{ color: 'var(--hazard)' }}>{p.stage}</span>
+                    <span style={{ color: 'var(--text-muted)' }}>{p.io}</span>
+                  </div>
+                  <h4 style={{ fontFamily: 'var(--font-display)', fontSize: '1.5rem', color: 'var(--paper)', lineHeight: 0.95, marginBottom: 14 }}>{p.title}</h4>
+                  <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.84rem', lineHeight: 1.6, color: 'var(--text-light-2)', textTransform: 'none', marginBottom: 18 }}>{p.desc}</p>
+                  <ul style={{ listStyle: 'none', marginTop: 'auto', display: 'grid', gap: 0 }}>
+                    {p.specs.map(([k, v], j) => (
+                      <li key={j} style={{ display: 'flex', justifyContent: 'space-between', gap: 12, fontFamily: 'var(--font-mono)', fontSize: '0.6rem', letterSpacing: '0.04em', borderTop: '1px solid var(--line-light)', padding: '7px 0' }}>
+                        <span style={{ color: 'var(--text-muted)' }}>{k}</span>
+                        <span style={{ color: 'var(--paper)', textAlign: 'right' }}>{v}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </article>
+              ))}
+            </HScrollStrip>
+          </Reveal>
+        </div>
 
         <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.62rem', color: 'var(--text-muted)', marginTop: 32, letterSpacing: '0.04em' }}>
           * ALL SEVERITY SCORES ARE ALGORITHMIC PROXIES INTENDED TO SUPPORT, NOT REPLACE, CLINICAL JUDGMENT.

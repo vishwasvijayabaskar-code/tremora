@@ -20,17 +20,6 @@ const titleLetters = [
   { src: l3, alt: 'm' }, { src: l4, alt: 'o' }, { src: l5, alt: 'r' }, { src: l6, alt: 'a' },
 ]
 
-const heroObjects = [
-  { type: 'pill', position: [-5, 2.8, 0.5], scale: 0.6, speed: 0.5 },
-  { type: 'torus', position: [5.2, -2, 0.3], scale: 0.65, speed: 0.35 },
-  { type: 'pulse', position: [-4.2, -2.8, 0.2], scale: 0.5, speed: 0.45 },
-  { type: 'brain', position: [4.5, 3, 0.4], scale: 0.5, speed: 0.3 },
-  { type: 'pill', position: [2, 3.8, -0.3], scale: 0.35, speed: 0.6 },
-  { type: 'torus', position: [-2.2, -3.8, 0.1], scale: 0.4, speed: 0.4 },
-  { type: 'pulse', position: [-1, 3.2, 0.6], scale: 0.3, speed: 0.55 },
-  { type: 'brain', position: [1.5, -3.5, 0.2], scale: 0.3, speed: 0.5 },
-]
-
 function CountStat({ display }) { const { ref, value } = useCountUp(display); return <span ref={ref}>{value}</span> }
 
 export default function Hero() {
@@ -66,9 +55,24 @@ export default function Hero() {
     <section ref={sectionRef} id="top" style={{
       position: 'relative', minHeight: '100dvh', background: 'var(--paper)',
       display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-      overflow: 'hidden', padding: '0 24px',
+      overflow: 'hidden', padding: '0 62px 0 24px',
     }}>
       <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 80% 60% at 50% 120%, rgba(230,25,25,0.05) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 1 }} />
+
+      {/* Tactical viewport registration frame — corner brackets + instrument tags */}
+      {['tl', 'tr', 'bl', 'br'].map((c) => (
+        <div key={c} className="hide-mobile" aria-hidden style={{
+          position: 'absolute', width: 18, height: 18, zIndex: 3, pointerEvents: 'none',
+          ...(c[0] === 't' ? { top: 92 } : { bottom: 26 }),
+          ...(c[1] === 'l' ? { left: 28 } : { right: 28 }),
+          borderTop: c[0] === 't' ? '1px solid var(--line-strong)' : 'none',
+          borderBottom: c[0] === 'b' ? '1px solid var(--line-strong)' : 'none',
+          borderLeft: c[1] === 'l' ? '1px solid var(--line-strong)' : 'none',
+          borderRight: c[1] === 'r' ? '1px solid var(--line-strong)' : 'none',
+        }} />
+      ))}
+      <span className="hide-mobile mono-label" aria-hidden style={{ position: 'absolute', top: 92, left: 54, zIndex: 3, pointerEvents: 'none', fontSize: '0.55rem', color: 'var(--text-muted)' }}>FIELD UNIT / REV 1.0</span>
+      <span className="hide-mobile mono-label" aria-hidden style={{ position: 'absolute', bottom: 24, right: 54, zIndex: 3, pointerEvents: 'none', fontSize: '0.55rem', color: 'var(--hazard)' }}>● SIGNAL LIVE</span>
 
       {/* Interactive 3D scene (Spline) — loaded via CDN web component, no npm dep.
           Ambient right-side accent, hidden on mobile. */}
@@ -99,7 +103,7 @@ export default function Hero() {
       </div>
 
       {/* Subtitle + proof + CTA */}
-      <div ref={contentRef} style={{ position: 'relative', zIndex: 3, textAlign: 'center', maxWidth: '720px', willChange: 'transform, opacity' }}>
+      <div ref={contentRef} style={{ position: 'relative', zIndex: 3, textAlign: 'center', maxWidth: '720px', marginRight: '38px', willChange: 'transform, opacity' }}>
         <Perspective entrance={false} maxRotateX={9} maxRotateY={16} smoothing={0.12} style={{ marginBottom: '28px' }}>
           <p ref={subtitleRef} style={{
             fontFamily: 'var(--font-sans)', fontSize: 'clamp(1.3rem, 3vw, 2.3rem)', color: 'var(--ink)',

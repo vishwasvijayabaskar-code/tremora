@@ -1,68 +1,77 @@
 import { useEffect, useRef } from 'react'
 
 /**
- * Sensor reticle cursor — a camera-focus frame (4 corner brackets) that slowly
- * spins around a coral center dot, then "locks on" (contracts + spins faster +
- * brightens) over any interactive element. On-brand for a targeting/sensor
- * device. Frame lags the dot for a bit of trailing weight.
+ * Telemetry HUD cursor — a tactical reticle (rotating tick-ring + corner
+ * brackets) trailing a square hazard core, with a live monospace readout of the
+ * cursor's screen coordinates + lock status. Locks on (contracts, spins up,
+ * status flips TRK -> LOCK, brightens) over any interactive element. On-brand
+ * for a sensor/targeting device; the live coordinate HUD is the signature.
+ * Single rAF, lerped follow, MutationObserver re-binds hover targets.
  */
 export default function CustomCursor() {
-  const dotRef = useRef(null)
+  const coreRef = useRef(null)
   const reticleRef = useRef(null)
-  const textRef = useRef(null)
-  const pos = useRef({ x: -100, y: -100 })
-  const dotPos = useRef({ x: -100, y: -100 })
-  const retPos = useRef({ x: -100, y: -100 })
+  const hudRef = useRef(null)
+  const statusRef = useRef(null)
+  const coordRef = useRef(null)
+
+  const pos = useRef({ x: -200, y: -200 })
+  const corePos = useRef({ x: -200, y: -200 })
+  const retPos = useRef({ x: -200, y: -200 })
   const hovering = useRef(false)
+  const labelText = useRef('')
   const spin = useRef(0)
   const lock = useRef(0) // eased 0->1 lock-on factor
   const raf = useRef(null)
 
   useEffect(() => {
-    const onMove = (e) => {
-      pos.current = { x: e.clientX, y: e.clientY }
-    }
+    const onMove = (e) => { pos.current = { x: e.clientX, y: e.clientY } }
 
     const onEnter = (e) => {
       hovering.current = true
-      const label = e.currentTarget.dataset?.cursorText || ''
-      if (textRef.current) {
-        textRef.current.textContent = label
-        textRef.current.style.opacity = label ? '1' : '0'
-      }
+      labelText.current = e.currentTarget.dataset?.cursorText || ''
     }
-
-    const onLeave = () => {
-      hovering.current = false
-      if (textRef.current) textRef.current.style.opacity = '0'
-    }
+    const onLeave = () => { hovering.current = false; labelText.current = '' }
 
     const animate = () => {
-      dotPos.current.x += (pos.current.x - dotPos.current.x) * 0.9
-      dotPos.current.y += (pos.current.y - dotPos.current.y) * 0.9
-      retPos.current.x += (pos.current.x - retPos.current.x) * 0.18
-      retPos.current.y += (pos.current.y - retPos.current.y) * 0.18
+      const p = pos.current
+      corePos.current.x += (p.x - corePos.current.x) * 0.85
+      corePos.current.y += (p.y - corePos.current.y) * 0.85
+      retPos.current.x += (p.x - retPos.current.x) * 0.16
+      retPos.current.y += (p.y - retPos.current.y) * 0.16
 
       lock.current += ((hovering.current ? 1 : 0) - lock.current) * 0.15
-      spin.current += 0.4 + lock.current * 1.6
+      spin.current += 0.35 + lock.current * 2.2
 
-      const retScale = 1 - lock.current * 0.32
-      const dotScale = 1 - lock.current * 0.5
+      const retScale = 1 - lock.current * 0.34
+      const coreScale = 1 - lock.current * 0.45
 
-      if (dotRef.current) {
-        dotRef.current.style.left = `${dotPos.current.x}px`
-        dotRef.current.style.top = `${dotPos.current.y}px`
-        dotRef.current.style.transform = `translate(-50%,-50%) scale(${dotScale.toFixed(3)})`
+      if (coreRef.current) {
+        const s = coreRef.current.style
+        s.left = `${corePos.current.x}px`
+        s.top = `${corePos.current.y}px`
+        s.transform = `translate(-50%,-50%) rotate(45deg) scale(${coreScale.toFixed(3)})`
       }
       if (reticleRef.current) {
-        reticleRef.current.style.left = `${retPos.current.x}px`
-        reticleRef.current.style.top = `${retPos.current.y}px`
-        reticleRef.current.style.transform = `translate(-50%,-50%) rotate(${spin.current.toFixed(1)}deg) scale(${retScale.toFixed(3)})`
-        reticleRef.current.style.opacity = (0.55 + lock.current * 0.45).toFixed(3)
+        const s = reticleRef.current.style
+        s.left = `${retPos.current.x}px`
+        s.top = `${retPos.current.y}px`
+        s.transform = `translate(-50%,-50%) rotate(${spin.current.toFixed(1)}deg) scale(${retScale.toFixed(3)})`
+        s.opacity = (0.5 + lock.current * 0.5).toFixed(3)
       }
-      if (textRef.current) {
-        textRef.current.style.left = `${retPos.current.x}px`
-        textRef.current.style.top = `${retPos.current.y + 30}px`
+      if (hudRef.current) {
+        const s = hudRef.current.style
+        s.left = `${retPos.current.x + 24}px`
+        s.top = `${retPos.current.y + 16}px`
+      }
+      if (coordRef.current) {
+        coordRef.current.textContent =
+          `X:${String(Math.round(p.x)).padStart(4, '0')} Y:${String(Math.round(p.y)).padStart(4, '0')}`
+      }
+      if (statusRef.current) {
+        const locked = lock.current > 0.5
+        statusRef.current.textContent = labelText.current || (locked ? '▣ LOCK' : '+ TRK')
+        statusRef.current.style.color = locked ? 'var(--hazard-2)' : 'var(--hazard)'
       }
 
       raf.current = requestAnimationFrame(animate)
@@ -72,7 +81,7 @@ export default function CustomCursor() {
     raf.current = requestAnimationFrame(animate)
 
     const bind = () => {
-      document.querySelectorAll('a, button, [data-cursor-hover]').forEach((el) => {
+      document.querySelectorAll('a, button, input, [role="button"], [data-cursor-hover], [data-cursor-text]').forEach((el) => {
         el.removeEventListener('mouseenter', onEnter)
         el.removeEventListener('mouseleave', onLeave)
         el.addEventListener('mouseenter', onEnter)
@@ -95,73 +104,41 @@ export default function CustomCursor() {
 
   return (
     <>
-      {/* Reticle — 4 corner brackets that spin + lock on */}
+      {/* Reticle — rotating tick-ring + corner brackets, lock-on contracts it */}
       <svg
         ref={reticleRef}
-        width="46"
-        height="46"
-        viewBox="0 0 46 46"
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          pointerEvents: 'none',
-          zIndex: 9998,
-          transform: 'translate(-50%,-50%)',
-          opacity: 0.55,
-        }}
+        width="54"
+        height="54"
+        viewBox="0 0 54 54"
+        style={{ position: 'fixed', top: 0, left: 0, pointerEvents: 'none', zIndex: 9998, transform: 'translate(-50%,-50%)', opacity: 0.5 }}
       >
-        <g
-          fill="none"
-          stroke="var(--coral)"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <path d="M5,15 L5,5 L15,5" />
-          <path d="M41,15 L41,5 L31,5" />
-          <path d="M5,31 L5,41 L15,41" />
-          <path d="M41,31 L41,41 L31,41" />
+        <g fill="none" stroke="var(--hazard)" strokeWidth="1.5" strokeLinecap="square">
+          <path d="M7,17 L7,7 L17,7" />
+          <path d="M47,17 L47,7 L37,7" />
+          <path d="M7,37 L7,47 L17,47" />
+          <path d="M47,37 L47,47 L37,47" />
+          <path d="M27,3 L27,9" />
+          <path d="M27,45 L27,51" />
+          <path d="M3,27 L9,27" />
+          <path d="M45,27 L51,27" />
+          <circle cx="27" cy="27" r="14" strokeWidth="1" strokeDasharray="2 4" opacity="0.6" />
         </g>
       </svg>
 
-      {/* Center dot */}
+      {/* Square hazard core (diamond) */}
       <div
-        ref={dotRef}
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: 6,
-          height: 6,
-          borderRadius: '50%',
-          background: 'var(--coral)',
-          pointerEvents: 'none',
-          zIndex: 9999,
-          transform: 'translate(-50%,-50%)',
-        }}
+        ref={coreRef}
+        style={{ position: 'fixed', top: 0, left: 0, width: 6, height: 6, background: 'var(--hazard)', pointerEvents: 'none', zIndex: 9999, transform: 'translate(-50%,-50%) rotate(45deg)' }}
       />
 
-      {/* Hover label */}
+      {/* Live telemetry HUD — status + screen coordinates */}
       <div
-        ref={textRef}
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          transform: 'translateX(-50%)',
-          pointerEvents: 'none',
-          zIndex: 9999,
-          fontSize: '0.55rem',
-          fontWeight: 700,
-          textTransform: 'uppercase',
-          letterSpacing: '0.18em',
-          color: 'var(--coral)',
-          opacity: 0,
-          transition: 'opacity 0.2s ease',
-          whiteSpace: 'nowrap',
-        }}
-      />
+        ref={hudRef}
+        style={{ position: 'fixed', top: 0, left: 0, pointerEvents: 'none', zIndex: 9999, display: 'flex', flexDirection: 'column', gap: 3, fontFamily: 'var(--font-mono)', fontSize: '0.5rem', letterSpacing: '0.14em', lineHeight: 1, whiteSpace: 'nowrap' }}
+      >
+        <span ref={statusRef} style={{ color: 'var(--hazard)', fontWeight: 700 }}>+ TRK</span>
+        <span ref={coordRef} style={{ color: 'var(--text-muted)' }}>X:0000 Y:0000</span>
+      </div>
     </>
   )
 }
