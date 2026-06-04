@@ -73,7 +73,7 @@ export default function Hero() {
       {/* Interactive 3D scene (Spline) — loaded via CDN web component, no npm dep.
           Ambient right-side accent, hidden on mobile. */}
       <div className="hide-mobile" style={{
-        position: 'absolute', top: 56, right: 0, bottom: 0, width: 'min(48vw, 680px)',
+        position: 'absolute', top: 56, right: '-6vw', bottom: '-6vh', width: 'min(62vw, 920px)',
         zIndex: 2,
         maskImage: 'radial-gradient(120% 100% at 72% 50%, #000 50%, transparent 100%)',
         WebkitMaskImage: 'radial-gradient(120% 100% at 72% 50%, #000 50%, transparent 100%)',
@@ -82,7 +82,7 @@ export default function Hero() {
       </div>
 
       {/* Chrome Title */}
-      <div ref={titleRef} style={{ position: 'relative', zIndex: 3, textAlign: 'center', willChange: 'transform', marginTop: 'clamp(56px, calc(8vh + 20px), 130px)', marginBottom: '40px' }}>
+      <div ref={titleRef} style={{ position: 'relative', left: '-40mm', zIndex: 3, textAlign: 'center', willChange: 'transform', marginTop: 'clamp(56px, calc(8vh + 20px), 130px)', marginBottom: '40px' }}>
         <div style={{ perspective: '1200px', transformStyle: 'preserve-3d' }}>
           <div style={{ overflow: 'hidden', paddingBottom: '16px' }}>
             <div aria-label="Tremora" style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-end', gap: 0, height: 'clamp(150px, 32vw, 380px)' }}>
@@ -99,7 +99,7 @@ export default function Hero() {
       </div>
 
       {/* Subtitle + proof + CTA */}
-      <div ref={contentRef} style={{ position: 'relative', zIndex: 3, textAlign: 'center', maxWidth: '720px', willChange: 'transform, opacity' }}>
+      <div ref={contentRef} style={{ position: 'relative', left: '-40mm', zIndex: 3, textAlign: 'center', maxWidth: '720px', willChange: 'transform, opacity' }}>
         <Perspective entrance={false} maxRotateX={9} maxRotateY={16} smoothing={0.12} style={{ marginBottom: '28px' }}>
           <p ref={subtitleRef} style={{
             fontFamily: 'var(--font-sans)', fontSize: 'clamp(1.3rem, 3vw, 2.3rem)', color: 'var(--ink)',
