@@ -104,3 +104,10 @@ input:focus { outline: 2px solid var(--hazard); outline-offset: 2px; }
 @media (max-width: 768px) {
   body, button { cursor: auto !important; }
 }
+
+/* Small-screen typography: tighten macro tracking so heavy headings + spaced
+   mono labels never overflow narrow viewports */
+@media (max-width: 600px) {
+  h1, h2, h3 { letter-spacing: -0.01em; }
+  .mono-label { letter-spacing: 0.1em; }
+}

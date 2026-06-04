@@ -58,6 +58,17 @@ export default function Hero() {
     }}>
       <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 80% 60% at 50% 120%, rgba(230,25,25,0.05) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 1 }} />
 
+      {/* Blueprint depth grid — static dot-matrix + hairlines, edge-faded (no rAF) */}
+      <div aria-hidden style={{
+        position: 'absolute', inset: 0, zIndex: 1, pointerEvents: 'none',
+        backgroundImage:
+          'radial-gradient(rgba(10,10,10,0.17) 1.1px, transparent 1.5px), linear-gradient(rgba(10,10,10,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(10,10,10,0.05) 1px, transparent 1px)',
+        backgroundSize: '44px 44px, 44px 44px, 44px 44px',
+        backgroundPosition: 'center',
+        maskImage: 'radial-gradient(115% 90% at 50% 42%, #000 30%, transparent 78%)',
+        WebkitMaskImage: 'radial-gradient(115% 90% at 50% 42%, #000 30%, transparent 78%)',
+      }} />
+
       {/* Tactical viewport registration frame — corner brackets + instrument tags */}
       {['tl', 'tr', 'bl', 'br'].map((c) => (
         <div key={c} className="hide-mobile" aria-hidden style={{
@@ -97,7 +108,7 @@ export default function Hero() {
             fontFamily: 'var(--font-sans)', fontSize: 'clamp(1.3rem, 3vw, 2.3rem)', color: 'var(--ink)',
             fontWeight: 600, lineHeight: 1.3, margin: 0, textTransform: 'none', letterSpacing: '-0.01em',
           }}>
-            If your neurologist can't see <Highlight color="coral">between visits</Highlight>, they're treating a <Highlight color="cream">snapshot</Highlight>, not a patient.
+            If your neurologist can't see <Highlight color="coral">between visits</Highlight>, they're treating a <Highlight color="ink">snapshot</Highlight>, not a patient.
           </p>
         </Perspective>
 

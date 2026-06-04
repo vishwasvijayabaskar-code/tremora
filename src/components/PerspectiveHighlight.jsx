@@ -140,6 +140,7 @@ const PRESETS = {
   peach: { bg: 'var(--hl-peach-bg)', ring: 'var(--hl-peach-ring)', text: '#1A1A1A' },
   cream: { bg: 'var(--hl-cream-bg)', ring: 'var(--hl-cream-ring)', text: '#1A1A1A' },
   lavender: { bg: 'var(--hl-lavender-bg)', ring: 'var(--hl-lavender-ring)', text: '#1A1A1A' },
+  ink: { bg: 'var(--ink)', ring: '10, 10, 10', text: '#fff' },
 }
 
 /**
