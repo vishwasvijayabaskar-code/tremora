@@ -2,7 +2,6 @@ import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Button from '../components/Button'
-import { SplineViewer } from '../components/SplineViewer'
 import { Perspective, Highlight } from '../components/PerspectiveHighlight'
 import { useCountUp } from '../hooks/useCountUp'
 import l0 from '../assets/title/l0.webp'
@@ -55,7 +54,7 @@ export default function Hero() {
     <section ref={sectionRef} id="top" style={{
       position: 'relative', minHeight: '100dvh', background: 'var(--paper)',
       display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-      overflow: 'hidden', padding: '0 62px 0 24px',
+      overflow: 'hidden', padding: '0 24px',
     }}>
       <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 80% 60% at 50% 120%, rgba(230,25,25,0.05) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 1 }} />
 
@@ -73,17 +72,6 @@ export default function Hero() {
       ))}
       <span className="hide-mobile mono-label" aria-hidden style={{ position: 'absolute', top: 92, left: 54, zIndex: 3, pointerEvents: 'none', fontSize: '0.55rem', color: 'var(--text-muted)' }}>FIELD UNIT / REV 1.0</span>
       <span className="hide-mobile mono-label" aria-hidden style={{ position: 'absolute', bottom: 24, right: 54, zIndex: 3, pointerEvents: 'none', fontSize: '0.55rem', color: 'var(--hazard)' }}>● SIGNAL LIVE</span>
-
-      {/* Interactive 3D scene (Spline) — loaded via CDN web component, no npm dep.
-          Ambient right-side accent, hidden on mobile. */}
-      <div className="hide-mobile" style={{
-        position: 'absolute', top: 56, right: 0, bottom: 0, width: 'min(48vw, 680px)',
-        zIndex: 2,
-        maskImage: 'radial-gradient(120% 100% at 72% 50%, #000 50%, transparent 100%)',
-        WebkitMaskImage: 'radial-gradient(120% 100% at 72% 50%, #000 50%, transparent 100%)',
-      }}>
-        <SplineViewer url="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode" style={{ width: '100%', height: '100%', display: 'block' }} />
-      </div>
 
       {/* Chrome Title */}
       <div ref={titleRef} style={{ position: 'relative', zIndex: 3, textAlign: 'center', willChange: 'transform', marginTop: 'clamp(56px, calc(8vh + 20px), 130px)', marginBottom: '40px' }}>
@@ -103,7 +91,7 @@ export default function Hero() {
       </div>
 
       {/* Subtitle + proof + CTA */}
-      <div ref={contentRef} style={{ position: 'relative', zIndex: 3, textAlign: 'center', maxWidth: '720px', marginRight: '38px', willChange: 'transform, opacity' }}>
+      <div ref={contentRef} style={{ position: 'relative', zIndex: 3, textAlign: 'center', maxWidth: '720px', willChange: 'transform, opacity' }}>
         <Perspective entrance={false} maxRotateX={9} maxRotateY={16} smoothing={0.12} style={{ marginBottom: '28px' }}>
           <p ref={subtitleRef} style={{
             fontFamily: 'var(--font-sans)', fontSize: 'clamp(1.3rem, 3vw, 2.3rem)', color: 'var(--ink)',
