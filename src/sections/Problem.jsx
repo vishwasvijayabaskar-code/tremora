@@ -50,7 +50,7 @@ function AnimatedWave({ color, height = 64, type }) {
 
 export default function Problem() {
   return (
-    <section id="problem" style={{ background: 'var(--paper)', padding: 'var(--section-pad) 0' }}>
+    <section id="problem" style={{ background: 'transparent', padding: 'var(--section-pad) 0' }}>
       <div className="container">
         <div className="mono-label" style={{ color: 'var(--hazard)', marginBottom: 18 }}>[ 01 / THE PROBLEM ]</div>
         <Reveal as="h2" variant="lines" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.4rem, 6.5vw, 6rem)', color: 'var(--ink)', lineHeight: 0.9, letterSpacing: '-0.03em', maxWidth: 1100, marginBottom: 24 }}>

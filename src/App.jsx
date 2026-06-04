@@ -1,8 +1,6 @@
 import { useLenis } from './hooks/useLenis'
 import CustomCursor from './components/CustomCursor'
-// LedGrid intentionally not mounted — kept in repo for background experiments.
-// To re-enable the sitewide LED, import it and render <LedGrid /> below + set the
-// light sections' background back to 'transparent'.
+import LedGrid from './components/LedGrid'
 import BendScroll from './components/BendScroll'
 import Navbar from './components/Navbar'
 import Marquee from './components/Marquee'
@@ -21,6 +19,7 @@ function App() {
   return (
     <>
       <CustomCursor />
+      <LedGrid />
       <Navbar />
       <div style={{ position: 'relative', zIndex: 1 }}>
         <Hero />

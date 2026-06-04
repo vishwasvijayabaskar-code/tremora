@@ -52,7 +52,7 @@ export default function Hero() {
 
   return (
     <section ref={sectionRef} id="top" style={{
-      position: 'relative', minHeight: '100dvh', background: 'var(--paper)',
+      position: 'relative', minHeight: '100dvh', background: 'transparent',
       display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
       overflow: 'hidden', padding: '0 24px',
     }}>
