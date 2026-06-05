@@ -62,7 +62,7 @@ export default function Hero() {
       <div aria-hidden style={{
         position: 'absolute', inset: 0, zIndex: 1, pointerEvents: 'none',
         backgroundImage:
-          'radial-gradient(rgba(10,10,10,0.17) 1.1px, transparent 1.5px), linear-gradient(rgba(10,10,10,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(10,10,10,0.05) 1px, transparent 1px)',
+          'radial-gradient(var(--grid-dot) 1.1px, transparent 1.5px), linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px)',
         backgroundSize: '44px 44px, 44px 44px, 44px 44px',
         backgroundPosition: 'center',
         maskImage: 'radial-gradient(115% 90% at 50% 42%, #000 30%, transparent 78%)',
