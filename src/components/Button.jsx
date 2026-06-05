@@ -13,7 +13,7 @@ if (typeof document !== 'undefined' && !document.getElementById('tm-btn-css')) {
   .tm-btn{
     --dup: 1.4em;
     position:relative; display:inline-flex; align-items:center; gap:12px;
-    padding:18px 28px; border-radius:0;
+    padding:18px 28px; border-radius:var(--radius-md);
     font-family:var(--font-mono); font-size:0.72rem; font-weight:500;
     letter-spacing:0.14em; text-transform:uppercase;
     cursor:pointer; overflow:hidden; border:none; line-height:1;
@@ -59,7 +59,7 @@ export default function Button({
   ...props
 }) {
   const palette = {
-    primary: { background: 'var(--hazard)', color: 'var(--paper)' },
+    primary: { background: 'var(--ink)', color: 'var(--paper)' },
     secondary: { background: 'transparent', color: 'var(--ink)', border: '1px solid var(--line-strong)' },
     dark: { background: 'var(--ink)', color: 'var(--paper)' },
   }

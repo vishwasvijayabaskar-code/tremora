@@ -4,20 +4,9 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Button from '../components/Button'
 import { Perspective, Highlight } from '../components/PerspectiveHighlight'
 import { useCountUp } from '../hooks/useCountUp'
-import l0 from '../assets/title/l0.webp'
-import l1 from '../assets/title/l1.webp'
-import l2 from '../assets/title/l2.webp'
-import l3 from '../assets/title/l3.webp'
-import l4 from '../assets/title/l4.webp'
-import l5 from '../assets/title/l5.webp'
-import l6 from '../assets/title/l6.webp'
-
 gsap.registerPlugin(ScrollTrigger)
 
-const titleLetters = [
-  { src: l0, alt: 'T' }, { src: l1, alt: 'r' }, { src: l2, alt: 'e' },
-  { src: l3, alt: 'm' }, { src: l4, alt: 'o' }, { src: l5, alt: 'r' }, { src: l6, alt: 'a' },
-]
+const WORDMARK = 'Tremora'
 
 function CountStat({ display }) { const { ref, value } = useCountUp(display); return <span ref={ref}>{value}</span> }
 
@@ -56,7 +45,7 @@ export default function Hero() {
       display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
       overflow: 'hidden', padding: '0 24px',
     }}>
-      <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 80% 60% at 50% 120%, rgba(230,25,25,0.05) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 1 }} />
+      <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 80% 60% at 50% 120%, var(--hazard) 0%, transparent 70%)', opacity: 0.06, pointerEvents: 'none', zIndex: 1 }} />
 
       {/* Blueprint depth grid — static dot-matrix + hairlines, edge-faded (no rAF) */}
       <div aria-hidden style={{
@@ -69,33 +58,17 @@ export default function Hero() {
         WebkitMaskImage: 'radial-gradient(115% 90% at 50% 42%, #000 30%, transparent 78%)',
       }} />
 
-      {/* Tactical viewport registration frame — corner brackets + instrument tags */}
-      {['tl', 'tr', 'bl', 'br'].map((c) => (
-        <div key={c} className="hide-mobile" aria-hidden style={{
-          position: 'absolute', width: 18, height: 18, zIndex: 3, pointerEvents: 'none',
-          ...(c[0] === 't' ? { top: 92 } : { bottom: 26 }),
-          ...(c[1] === 'l' ? { left: 28 } : { right: 28 }),
-          borderTop: c[0] === 't' ? '1px solid var(--line-strong)' : 'none',
-          borderBottom: c[0] === 'b' ? '1px solid var(--line-strong)' : 'none',
-          borderLeft: c[1] === 'l' ? '1px solid var(--line-strong)' : 'none',
-          borderRight: c[1] === 'r' ? '1px solid var(--line-strong)' : 'none',
-        }} />
-      ))}
-      <span className="hide-mobile mono-label" aria-hidden style={{ position: 'absolute', top: 92, left: 54, zIndex: 3, pointerEvents: 'none', fontSize: '0.55rem', color: 'var(--text-muted)' }}>FIELD UNIT / REV 1.0</span>
-      <span className="hide-mobile mono-label" aria-hidden style={{ position: 'absolute', bottom: 24, right: 54, zIndex: 3, pointerEvents: 'none', fontSize: '0.55rem', color: 'var(--hazard)' }}>● SIGNAL LIVE</span>
-
-      {/* Chrome Title */}
+      {/* Wordmark */}
       <div ref={titleRef} style={{ position: 'relative', zIndex: 3, textAlign: 'center', willChange: 'transform', marginTop: 'clamp(56px, calc(8vh + 20px), 130px)', marginBottom: '40px' }}>
         <div style={{ perspective: '1200px', transformStyle: 'preserve-3d' }}>
           <div style={{ overflow: 'hidden', paddingBottom: '16px' }}>
-            <div aria-label="Tremora" style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-end', gap: 0, height: 'clamp(150px, 32vw, 380px)' }}>
-              {titleLetters.map((letter, i) => (
-                <span key={i} className="hero-chrome-letter" style={{ transformOrigin: 'bottom center', display: 'block', height: '100%' }}>
-                  <img src={letter.src} alt={letter.alt} draggable={false}
-                    style={{ height: '100%', width: 'auto', display: 'block', animation: `heroFloat ${(3.6 + i * 0.25).toFixed(2)}s ease-in-out ${(i * 0.18).toFixed(2)}s infinite` }} />
+            <h1 aria-label="Tremora" style={{ display: 'flex', justifyContent: 'center', alignItems: 'baseline', gap: 0, margin: 0, fontFamily: 'var(--font-display)', fontWeight: 800, color: 'var(--ink)', lineHeight: 0.82, letterSpacing: '-0.045em', fontSize: 'clamp(4.2rem, 17vw, 15rem)', textTransform: 'none' }}>
+              {WORDMARK.split('').map((ch, i) => (
+                <span key={i} className="hero-chrome-letter" style={{ display: 'inline-block', transformOrigin: 'bottom center', willChange: 'transform' }}>
+                  <span style={{ display: 'inline-block', animation: `heroFloat ${(3.6 + i * 0.25).toFixed(2)}s ease-in-out ${(i * 0.18).toFixed(2)}s infinite` }}>{ch}</span>
                 </span>
               ))}
-            </div>
+            </h1>
           </div>
         </div>
         <div className="mono-label" style={{ letterSpacing: '0.35em', marginTop: '8px' }}>[ CONTINUOUS TREMOR INTELLIGENCE ]</div>
