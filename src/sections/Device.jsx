@@ -37,7 +37,7 @@ export default function Device() {
           <div>
             <Reveal><DeviceRender /></Reveal>
             <Reveal style={{ marginTop: 28, fontFamily: 'var(--font-sans)', fontSize: '0.95rem', lineHeight: 1.7, color: 'var(--text-secondary)', textTransform: 'none' }}>
-              Purpose-built hardware for continuous monitoring. Swipe the deck — every component chosen for clinical-grade data quality.
+              Purpose-built hardware for continuous monitoring. Swipe the deck, every component chosen for clinical-grade data quality.
             </Reveal>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', marginTop: 28, border: '1px solid var(--line-strong)' }}>
               {prices.map((p, i) => (
