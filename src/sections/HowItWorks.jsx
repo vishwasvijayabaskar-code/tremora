@@ -13,10 +13,10 @@ const steps = [
 const pipeline = [
   { stage: 'P-01', io: 'SENSOR', title: 'Raw Capture', desc: 'Six-axis inertial data streamed off the wrist module, continuously, every waking hour.', specs: [['IMU', 'MPU-6050'], ['RATE', '200 Hz'], ['RANGE', '±2g / ±250°/s'], ['AXES', '3 accel + 3 gyro']] },
   { stage: 'P-02', io: 'BUFFER', title: 'Windowing', desc: 'The stream is cut into overlapping frames so no tremor burst ever falls between two windows.', specs: [['WINDOW', '256 samples'], ['SPAN', '1.28 s'], ['OVERLAP', '50%'], ['TAPER', 'Hann']] },
-  { stage: 'P-03', io: 'TRANSFORM', title: 'FFT', desc: 'Each frame moves to the frequency domain to isolate the 4–6 Hz Parkinsonian tremor band from voluntary motion.', specs: [['METHOD', 'Radix-2 FFT'], ['BINS', '128'], ['BAND', '4–6 Hz'], ['CLEAN', 'DC + drift removed']] },
+  { stage: 'P-03', io: 'TRANSFORM', title: 'FFT', desc: 'Each frame moves to the frequency domain to isolate the 4-6 Hz Parkinsonian tremor band from voluntary motion.', specs: [['METHOD', 'Radix-2 FFT'], ['BINS', '128'], ['BAND', '4-6 Hz'], ['CLEAN', 'DC + drift removed']] },
   { stage: 'P-04', io: 'FEATURES', title: 'Feature Vector', desc: 'A compact set of discriminative features is computed per window and handed to the classifier.', specs: [['BAND PWR', 'tremor / total'], ['ENTROPY', 'spectral'], ['RMS', 'per axis'], ['PEAK', 'dominant Hz']] },
-  { stage: 'P-05', io: 'INFERENCE', title: 'Random Forest', desc: 'A trained ensemble scores severity entirely on the ESP32 — no cloud, no latency, no data leaving the wrist.', specs: [['MODEL', 'Random Forest'], ['TREES', '100'], ['LATENCY', '<50 ms'], ['ACCURACY', '86.4%*']] },
-  { stage: 'P-06', io: 'OUTPUT', title: 'UPDRS Proxy', desc: 'Window scores aggregate into a continuous severity curve, time-aligned to every logged medication dose.', specs: [['SCALE', '0–4 proxy'], ['CADENCE', 'per minute'], ['ALIGNED', 'dose events'], ['EXPORT', 'CSV / PDF']] },
+  { stage: 'P-05', io: 'INFERENCE', title: 'Random Forest', desc: 'A trained ensemble scores severity entirely on the ESP32, with no cloud, no latency, no data leaving the wrist.', specs: [['MODEL', 'Random Forest'], ['TREES', '100'], ['LATENCY', '<50 ms'], ['ACCURACY', '86.4%*']] },
+  { stage: 'P-06', io: 'OUTPUT', title: 'UPDRS Proxy', desc: 'Window scores aggregate into a continuous severity curve, time-aligned to every logged medication dose.', specs: [['SCALE', '0-4 proxy'], ['CADENCE', 'per minute'], ['ALIGNED', 'dose events'], ['EXPORT', 'CSV / PDF']] },
 ]
 
 function Metric({ display }) { const { ref, value } = useCountUp(display); return <span ref={ref}>{value}</span> }

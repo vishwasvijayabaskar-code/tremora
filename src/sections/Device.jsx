@@ -3,7 +3,7 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import { EffectCards, Keyboard } from 'swiper/modules'
 import { useCountUp } from '../hooks/useCountUp'
 import Reveal from '../components/Reveal'
-import Placeholder from '../components/Placeholder'
+import DeviceRender from '../components/DeviceRender'
 import { SliderArrows, injectSliderCSS } from '../components/Slider'
 
 injectSliderCSS()
@@ -12,7 +12,7 @@ const cards = [
   { n: 'UNIT', label: 'Tremora v1', desc: 'Wrist-worn module, ~50×30×12mm. Six subsystems, one purpose: clinical-grade tremor data, continuously.', intro: true },
   { n: 'C-01', label: 'ESP32-WROOM-32', desc: 'Dual-core MCU with Wi-Fi + BLE. Runs the classifier and streams to the companion app.' },
   { n: 'C-02', label: 'MPU-6050 IMU', desc: '6-axis motion sensing at 200Hz. The raw accel + gyro every tremor reading is built from.' },
-  { n: 'C-03', label: 'Random Forest', desc: '86.4% accuracy, on-device. Scores tremor severity in <50ms per window — no cloud round-trip.' },
+  { n: 'C-03', label: 'Random Forest', desc: '86.4% accuracy, on-device. Scores tremor severity in <50ms per window, no cloud round-trip.'},
   { n: 'C-04', label: 'TP4056 + LiPo', desc: '2000mAh, USB-C rechargeable. ~18 hours of active recording per charge.' },
   { n: 'C-05', label: 'SPIFFS Storage', desc: 'Per-session CSV logging on flash. Weeks of raw data retained for export and review.' },
   { n: 'C-06', label: 'Med Button', desc: 'One-press dose-event logging. Builds the before/after response curve for every medication.' },
@@ -35,7 +35,7 @@ export default function Device() {
         <div className="grid-responsive" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 56, alignItems: 'start' }}>
           {/* LEFT: render placeholder + spec list + price row */}
           <div>
-            <Reveal><Placeholder label="DEVICE RENDER" sub="EXPLODED VIEW / SOON" ratio="4/3" theme="paper" /></Reveal>
+            <Reveal><DeviceRender /></Reveal>
             <Reveal style={{ marginTop: 28, fontFamily: 'var(--font-sans)', fontSize: '0.95rem', lineHeight: 1.7, color: 'var(--text-secondary)', textTransform: 'none' }}>
               Purpose-built hardware for continuous monitoring. Swipe the deck — every component chosen for clinical-grade data quality.
             </Reveal>
