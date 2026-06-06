@@ -1,14 +1,73 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/tremora/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>tremora</title>
-    <script type="module" crossorigin src="/tremora/assets/index-Bi4uqFLW.js"></script>
-    <link rel="stylesheet" crossorigin href="/tremora/assets/index-C-nE0Ttb.css">
-  </head>
-  <body>
-    <div id="root"></div>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex" />
+  <title>Tremora — Design Explorations</title>
+  <link rel="icon" type="image/svg+xml" href="/tremora/main/favicon.svg" />
+  <style>
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      background: #0b0b0d; color: #f2f2f0; -webkit-font-smoothing: antialiased;
+      padding: clamp(40px, 7vw, 100px) clamp(20px, 5vw, 64px) 80px;
+    }
+    .wrap { max-width: 1180px; margin: 0 auto; }
+    .kicker { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase; color: #8a8a92; }
+    h1 { font-size: clamp(2.2rem, 5vw, 3.6rem); letter-spacing: -0.035em; line-height: 1.02; margin: 14px 0 14px; font-weight: 800; }
+    .lede { color: #a7a7ad; max-width: 60ch; line-height: 1.6; font-size: 1.02rem; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(258px, 1fr)); gap: 18px; margin-top: 48px; }
+    a.card {
+      display: flex; flex-direction: column; text-decoration: none; color: inherit;
+      border: 1px solid #232327; border-radius: 14px; overflow: hidden; background: #131316;
+      transition: transform .25s cubic-bezier(.22,1,.36,1), border-color .25s, box-shadow .25s;
+    }
+    a.card:hover { transform: translateY(-4px); border-color: #3a3a40; box-shadow: 0 24px 50px -28px rgba(0,0,0,.8); }
+    .swatch { height: 96px; position: relative; display: flex; align-items: flex-end; padding: 12px; }
+    .swatch .dot { width: 30px; height: 30px; border-radius: 50%; box-shadow: 0 2px 10px rgba(0,0,0,.18); }
+    .body { padding: 16px 16px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+    .name { font-size: 1.08rem; font-weight: 700; letter-spacing: -0.01em; display: flex; align-items: center; gap: 8px; }
+    .tag { font-family: ui-monospace, Menlo, monospace; font-size: 0.55rem; letter-spacing: 0.12em; text-transform: uppercase; color: #0b0b0d; background: #f2f2f0; padding: 2px 6px; border-radius: 4px; }
+    .blurb { color: #9b9ba2; font-size: 0.86rem; line-height: 1.5; }
+    .open { margin-top: auto; font-family: ui-monospace, Menlo, monospace; font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: #c9c9cf; }
+    footer { margin-top: 56px; font-family: ui-monospace, Menlo, monospace; font-size: 0.66rem; letter-spacing: 0.08em; color: #6c6c74; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="kicker">Tremora / Continuous tremor intelligence</div>
+    <h1>Design explorations</h1>
+    <p class="lede">Nine directions for the Tremora marketing site, same content, different design systems. Clinical Minimal and Slate Pro have full bespoke layouts (real dashboard + device schematic); the rest are themed re-skins.</p>
+
+    <div class="grid" id="grid"></div>
+    <footer>Internal preview, not indexed. Pick a direction.</footer>
+  </div>
+
+  <script>
+    const V = [
+      { slug:'clinical-minimal', name:'Clinical Minimal', bespoke:true, paper:'#FAFAF7', accent:'#2E5BD8', blurb:'Warm-white, clinical-blue. Asymmetric hero + live dashboard. Trust-first medical.' },
+      { slug:'slate-pro', name:'Slate Pro', bespoke:true, paper:'#F5F7FA', accent:'#4F5BD5', blurb:'Cool slate + indigo, Linear-style. Product-led hero with wide preview.' },
+      { slug:'swiss-mono', name:'Swiss Mono', paper:'#F6F6F4', accent:'#2438E8', blurb:'Stark white/black + electric cobalt. Big grotesk, poster scale.' },
+      { slug:'editorial-journal', name:'Editorial Journal', paper:'#F7F4ED', accent:'#8E2433', blurb:'Ivory + oxblood, Newsreader serif. Medical-journal authority.' },
+      { slug:'warm-forest', name:'Warm Forest', paper:'#F2EEE4', accent:'#BE7F22', blurb:'Bone + forest green + amber. Humanist premium.' },
+      { slug:'sunset', name:'Sunset', paper:'#FBF4EC', accent:'#E0512F', blurb:'Warm cream + bright coral. Friendly, energetic, rounded.' },
+      { slug:'blueprint', name:'Blueprint', paper:'#EBF1F5', accent:'#0E8FC9', blurb:'Navy + cyan, IBM Plex. Engineering drafting / schematic.' },
+      { slug:'soft-biotech', name:'Soft Biotech', paper:'#F3F7F6', accent:'#128C77', blurb:'Cool off-white + soft teal. Rounded, gentle, Apple-Health.' },
+      { slug:'main', name:'Neutral Base', paper:'#F4F4F0', accent:'#E61919', blurb:'Plain industrial-brutalist base, hazard red. No bespoke layout.' },
+    ];
+    document.getElementById('grid').innerHTML = V.map(v => `
+      <a class="card" href="./${v.slug}/">
+        <div class="swatch" style="background:${v.paper}">
+          <span class="dot" style="background:${v.accent}"></span>
+        </div>
+        <div class="body">
+          <div class="name">${v.name} ${v.bespoke ? '<span class="tag">Bespoke</span>' : ''}</div>
+          <div class="blurb">${v.blurb}</div>
+          <div class="open">Open &rarr;</div>
+        </div>
+      </a>`).join('');
+  </script>
+</body>
 </html>
