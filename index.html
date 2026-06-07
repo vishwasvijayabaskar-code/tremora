@@ -17,7 +17,7 @@
     .wrap { max-width: 1180px; margin: 0 auto; }
     .kicker { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase; color: #8a8a92; }
     h1 { font-size: clamp(2.2rem, 5vw, 3.6rem); letter-spacing: -0.035em; line-height: 1.02; margin: 14px 0 14px; font-weight: 800; }
-    .lede { color: #a7a7ad; max-width: 60ch; line-height: 1.6; font-size: 1.02rem; }
+    .lede { color: #a7a7ad; max-width: 62ch; line-height: 1.6; font-size: 1.02rem; }
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(258px, 1fr)); gap: 18px; margin-top: 48px; }
     a.card {
       display: flex; flex-direction: column; text-decoration: none; color: inherit;
@@ -25,8 +25,9 @@
       transition: transform .25s cubic-bezier(.22,1,.36,1), border-color .25s, box-shadow .25s;
     }
     a.card:hover { transform: translateY(-4px); border-color: #3a3a40; box-shadow: 0 24px 50px -28px rgba(0,0,0,.8); }
-    .swatch { height: 96px; position: relative; display: flex; align-items: flex-end; padding: 12px; }
+    .swatch { height: 96px; position: relative; display: flex; align-items: flex-end; gap: 8px; padding: 12px; }
     .swatch .dot { width: 30px; height: 30px; border-radius: 50%; box-shadow: 0 2px 10px rgba(0,0,0,.18); }
+    .swatch .dot.sm { width: 20px; height: 20px; }
     .body { padding: 16px 16px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
     .name { font-size: 1.08rem; font-weight: 700; letter-spacing: -0.01em; display: flex; align-items: center; gap: 8px; }
     .tag { font-family: ui-monospace, Menlo, monospace; font-size: 0.55rem; letter-spacing: 0.12em; text-transform: uppercase; color: #0b0b0d; background: #f2f2f0; padding: 2px 6px; border-radius: 4px; }
@@ -39,7 +40,7 @@
   <div class="wrap">
     <div class="kicker">Tremora / Continuous tremor intelligence</div>
     <h1>Design explorations</h1>
-    <p class="lede">Nine directions for the Tremora marketing site, same content, different design systems. Clinical Minimal and Slate Pro have full bespoke layouts (real dashboard + device schematic); the rest are themed re-skins.</p>
+    <p class="lede">Nine directions for the Tremora marketing site, same content, different design systems. Clinical Minimal and Slate Pro have full bespoke layouts (real 2-color dashboard + device schematic, two-accent palette); the rest are themed re-skins.</p>
 
     <div class="grid" id="grid"></div>
     <footer>Internal preview, not indexed. Pick a direction.</footer>
@@ -47,8 +48,8 @@
 
   <script>
     const V = [
-      { slug:'clinical-minimal', name:'Clinical Minimal', bespoke:true, paper:'#FAFAF7', accent:'#2E5BD8', blurb:'Warm-white, clinical-blue. Asymmetric hero + live dashboard. Trust-first medical.' },
-      { slug:'slate-pro', name:'Slate Pro', bespoke:true, paper:'#F5F7FA', accent:'#4F5BD5', blurb:'Cool slate + indigo, Linear-style. Product-led hero with wide preview.' },
+      { slug:'clinical-minimal', name:'Clinical Minimal', bespoke:true, paper:'#FAFAF7', accent:'#2E5BD8', accent2:'#0FA37F', blurb:'Warm-white, clinical-blue + emerald. Asymmetric hero, 2-color dashboard, device schematic.' },
+      { slug:'slate-pro', name:'Slate Pro', bespoke:true, paper:'#F5F7FA', accent:'#4F5BD5', accent2:'#11A6AE', blurb:'Cool slate, indigo + teal, Linear-style. Product-led hero, 2-color dashboard.' },
       { slug:'swiss-mono', name:'Swiss Mono', paper:'#F6F6F4', accent:'#2438E8', blurb:'Stark white/black + electric cobalt. Big grotesk, poster scale.' },
       { slug:'editorial-journal', name:'Editorial Journal', paper:'#F7F4ED', accent:'#8E2433', blurb:'Ivory + oxblood, Newsreader serif. Medical-journal authority.' },
       { slug:'warm-forest', name:'Warm Forest', paper:'#F2EEE4', accent:'#BE7F22', blurb:'Bone + forest green + amber. Humanist premium.' },
@@ -61,6 +62,7 @@
       <a class="card" href="./${v.slug}/">
         <div class="swatch" style="background:${v.paper}">
           <span class="dot" style="background:${v.accent}"></span>
+          ${v.accent2 ? `<span class="dot sm" style="background:${v.accent2}"></span>` : ''}
         </div>
         <div class="body">
           <div class="name">${v.name} ${v.bespoke ? '<span class="tag">Bespoke</span>' : ''}</div>
