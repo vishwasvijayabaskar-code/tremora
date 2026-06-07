@@ -38,7 +38,7 @@ export default function Hero() {
       padding: 'clamp(104px, 15vh, 156px) clamp(20px, 5vw, 56px) 64px',
     }}>
       {/* subtle accent glow + blueprint grid */}
-      <div aria-hidden style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 70% 60% at 78% 30%, var(--hazard) 0%, transparent 62%)', opacity: 0.05, pointerEvents: 'none', zIndex: 0 }} />
+      <div aria-hidden style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 58% 54% at 80% 24%, var(--hazard) 0%, transparent 60%), radial-gradient(ellipse 48% 48% at 18% 82%, var(--accent-2) 0%, transparent 60%)', opacity: 0.07, pointerEvents: 'none', zIndex: 0 }} />
       <div aria-hidden style={{
         position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none',
         backgroundImage: 'radial-gradient(var(--grid-dot) 1.1px, transparent 1.5px)',

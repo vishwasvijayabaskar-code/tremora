@@ -12,9 +12,11 @@
   --ink-2:        #1E2128;
   --ink-3:        #2A2E37;
 
-  /* --- Single accent: calm clinical blue --- */
+  /* --- Accents: clinical blue (primary) + emerald (secondary) --- */
   --hazard:       #2E5BD8;
   --hazard-2:     #3D6BEA;
+  --accent-2:      #0FA37F;
+  --accent-2-soft: rgba(15,163,127,0.12);
 
   /* --- Text --- */
   --text-primary:   #16181C;
